@@ -2,11 +2,13 @@ import { mosques } from '../../lib/data'
 import { MosqueCard } from '../../components/ui/mosque-card'
 import { Separator } from '../../../components/ui/separator'
 import { Mosque } from '../../lib/icon'
+import { Info } from 'lucide-react';
 
 export const metadata = {
   title: 'Mosques Directory | Salah Times',
   description: 'Browse all mosques in the directory and find their prayer times',
 }
+
 
 export default function MosquesPage() {
   return (

@@ -1,6 +1,11 @@
 import { LucideCrop as LucideProps } from 'lucide-react'
 import { Info } from 'lucide-react';
-export const Mosque = ({ ...props }: typeof Info) => (
+
+interface MosqueIconProps extends React.ComponentProps<typeof Info>  {
+  name?: string;
+  className?: string
+}
+export const Mosque = ({ ...props }: MosqueIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
