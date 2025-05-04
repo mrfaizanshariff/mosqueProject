@@ -26,7 +26,7 @@ import { MosqueAnnouncementBanner } from '../../../components/mosque/mosque-anno
 import { MosqueLocation } from '../../../components/mosque/mosque-location'
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const mosque = getMosqueById(params.id)
+  const mosque:any = getMosqueById(params.id)
   
   if (!mosque) {
     return {
@@ -240,7 +240,7 @@ export default function MosqueDetailPage({ params }: { params: { id: string } })
                 <CardTitle className="text-xl">Location</CardTitle>
               </CardHeader>
               <CardContent>
-                <MosqueLocation location={mosque.location} name={mosque.name} />
+                {/* <MosqueLocation location={mosque.location} name={mosque.name} /> */}
                 
                 <Button 
                   className="w-full mt-4" 
@@ -248,7 +248,7 @@ export default function MosqueDetailPage({ params }: { params: { id: string } })
                   asChild
                 >
                   <a 
-                    href={`https://maps.google.com/?q=${mosque.location.lat},${mosque.location.lng}`}
+                    href={mosque.locationURL}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

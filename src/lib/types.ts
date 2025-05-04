@@ -36,8 +36,9 @@ export interface Mosque {
   zipCode: string;
   phone?: string;
   email?: string;
+  locationURL?:string;
   website?: string;
-  location: {
+  location?: {
     lat: number;
     lng: number;
   };

@@ -9,10 +9,11 @@ import { cn } from '../../../lib/utils'
 import Link from 'next/link'
 
 interface PrayerTimesTableProps {
-  mosques: Mosque[]
+  mosques: Mosque[];
+  rowsPerPage?: number; 
 }
 
-export function PrayerTimesTable({ mosques }: PrayerTimesTableProps) {
+export function PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTableProps) {
   const [currentPrayer, setCurrentPrayer] = useState<Prayer | null>(null)
 
   useEffect(() => {
@@ -26,11 +27,30 @@ export function PrayerTimesTable({ mosques }: PrayerTimesTableProps) {
   }, [])
 
   const prayers: Prayer[] = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const filteredData = mosques.filter((row) =>
+    Object.values(row).some((val) => val.toString().toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
   return (
     <Card className="border-border/40 bg-background/60 backdrop-blur-sm">
       <CardContent className="p-0">
         <div className="overflow-x-auto">
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-full p-2 border rounded"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                />
+              </div>
           <Table>
             <TableHeader>
               <TableRow>
@@ -54,7 +74,7 @@ export function PrayerTimesTable({ mosques }: PrayerTimesTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mosques.map((mosque) => (
+              {paginatedData.map((mosque) => (
                 <TableRow 
                   key={mosque.id}
                   className="hover:bg-muted/50 transition-colors"
@@ -62,7 +82,7 @@ export function PrayerTimesTable({ mosques }: PrayerTimesTableProps) {
                   <TableCell className="font-medium">
                     <Link 
                       href={`/mosques/${mosque.id}`}
-                      className="hover:text-primary transition-colors hover:underline"
+                      className="hover:text-primary text-blue-400 transition-colors hover:underline"
                     >
                       {mosque.name}
                     </Link>
@@ -82,6 +102,18 @@ export function PrayerTimesTable({ mosques }: PrayerTimesTableProps) {
               ))}
             </TableBody>
           </Table>
+
+          <div className="flex justify-between items-center pt-2">
+        <button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => p + 1)}>
+          Next
+        </button>
+      </div>
         </div>
       </CardContent>
     </Card>
