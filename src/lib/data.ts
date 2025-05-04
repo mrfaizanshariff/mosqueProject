@@ -19,6 +19,10 @@ export const mosques: Mosque[] = [
       "Maghrib": "19:30",
       "Isha": "21:00"
     },
+    "location":{
+      "lat":12.329064,
+      "lng":76.684796
+    },
     "facilities": [
       {
         "id": "1-1",
@@ -54,8 +58,8 @@ export const mosques: Mosque[] = [
     "images": [
       {
         "id": "1-1",
-        "url": "https://images.unsplash.com/photo-1684453728323-a8c2e5b615eb?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "alt": "Masjid Al-Noor exterior view",
+        "url": "https://lh3.googleusercontent.com/p/AF1QipPLBy6DnjnlDkFQqF6VTsFCQ2NQ7jX3LpAKNl06=w80-h106-k-no",
+        "alt": "Bilal Masjid",
         "width": 1200,
         "height": 800
       }
@@ -124,7 +128,7 @@ export const mosques: Mosque[] = [
     "images": [
       {
         "id": "2-1",
-        "url": "https://images.unsplash.com/photo-1684453728323-a8c2e5b615eb?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "url": "https://lh3.googleusercontent.com/p/AF1QipP_ZNOAHxj_hK45DdHryU4aV8EshLtHrgw1kIQH=w80-h106-k-no",
         "alt": "Masjid Al-Noor exterior view",
         "width": 1200,
         "height": 800
@@ -194,8 +198,8 @@ export const mosques: Mosque[] = [
     "images": [
       {
         "id": "3-1",
-        "url": "https://images.unsplash.com/photo-1684453728323-a8c2e5b615eb?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "alt": "Masjid Al-Noor exterior view",
+        "url": "https://lh3.googleusercontent.com/p/AF1QipMnBN6VHO5j3RMJl-iXxC0ZpnLfqIquZAXYYamW=w163-h92-k-no",
+        "alt": "Masjid Nimra",
         "width": 1200,
         "height": 800
       }

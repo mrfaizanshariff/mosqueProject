@@ -39,8 +39,8 @@ export interface Mosque {
   locationURL?:string;
   website?: string;
   location?: {
-    lat: number;
-    lng: number;
+    lat: number | null;
+    lng: number | null;
   };
   prayerTimes: PrayerTimes;
   facilities: Facility[];

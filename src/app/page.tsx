@@ -5,6 +5,7 @@ import { mosques } from '../lib/data'
 import { Button } from '../../components/ui/button'
 import { Search, MapPin, Clock, Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { NearbyMosques } from '../components/mosque/nearby-mosques'
 
 export default function Home() {
   // Only show 3 mosques on the homepage
@@ -35,6 +36,7 @@ export default function Home() {
               </Link>
             </Button>
           </div>
+          <NearbyMosques mosques={mosques} />
         </div>
       </section>
       

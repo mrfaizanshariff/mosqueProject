@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center">
               <Clock className="h-6 w-6 text-primary mr-2" />
-              <span className="font-amiri text-2xl font-bold">Salah Times</span>
+              <span className="font-amiri text-2xl font-bold">Mosques of India</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
               Helping Muslims find prayer times at local mosques. Always stay connected with your community.
@@ -51,7 +51,7 @@ const Footer = () => {
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Salah Times. All rights reserved.
+            &copy; {new Date().getFullYear()} Mosques of India. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground flex items-center">
             Made with <Heart className="h-4 w-4 text-destructive mx-1" /> for the Muslim community

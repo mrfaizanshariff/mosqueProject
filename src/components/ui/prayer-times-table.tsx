@@ -29,17 +29,23 @@ export function PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTable
   const prayers: Prayer[] = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const filteredData = mosques.filter((row) =>
-    Object.values(row).some((val) => val.toString().toLowerCase().includes(searchTerm.toLowerCase()))
-  );
-
+  const [selectedCity, setSelectedCity] = useState<string>('All')
+  const uniqueCities = Array.from(new Set(mosques.map(m => m.city))).sort()
+  const filteredData = mosques.filter((row) => {
+    const matchesCity = selectedCity === 'All' || row.city === selectedCity
+    const matchesSearch = Object.values(row).some((val) =>
+      val?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    return matchesCity && matchesSearch
+  })
+  
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   const paginatedData = filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
   return (
     <Card className="border-border/40 bg-background/60 backdrop-blur-sm">
       <CardContent className="p-0">
         <div className="overflow-x-auto">
-              <div className="space-y-4">
+              <div className="flex">
                 <input
                   type="text"
                   placeholder="Search..."
@@ -50,6 +56,22 @@ export function PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTable
                     setCurrentPage(1);
                   }}
                 />
+
+            <select
+              className="p-2 border rounded h-full w-full sm:w-1/2"
+              value={selectedCity}
+              onChange={(e) => {
+                setSelectedCity(e.target.value)
+                setCurrentPage(1)
+              }}
+            >
+              <option value="All">All Cities</option>
+              {uniqueCities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
               </div>
           <Table>
             <TableHeader>

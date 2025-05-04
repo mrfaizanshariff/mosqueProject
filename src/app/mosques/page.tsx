@@ -5,7 +5,7 @@ import { Mosque } from '../../lib/icon'
 import { Info } from 'lucide-react';
 
 export const metadata = {
-  title: 'Mosques Directory | Salah Times',
+  title: 'Mosques Directory | Mosques of India',
   description: 'Browse all mosques in the directory and find their prayer times',
 }
 

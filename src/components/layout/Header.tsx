@@ -51,7 +51,7 @@ const Header = () => {
         <div className="flex items-center justify-between py-4">
           <Link href="/" className="flex items-center space-x-2">
             <Clock className="h-6 w-6 text-primary" />
-            <span className="font-amiri text-xl md:text-2xl font-bold">Salah Times</span>
+            <span className="font-amiri text-xl md:text-2xl font-bold">Mosques of India</span>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
