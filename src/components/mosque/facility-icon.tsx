@@ -1,8 +1,9 @@
-import { LucideCrop as LucideProps } from 'lucide-react'
+import type {  LucideProps } from 'lucide-react'
 import * as LucideIcons from 'lucide-react'
 
 interface FacilityIconProps extends LucideProps {
-  name: string
+  name: string;
+  className?: string
 }
 
 export function FacilityIcon({ name, ...props }: FacilityIconProps) {
@@ -12,8 +13,8 @@ export function FacilityIcon({ name, ...props }: FacilityIconProps) {
     'users': 'Users',
     'book-open': 'BookOpen',
     'school': 'School',
-    'parking': 'Parking',
-    'wheelchair': 'Wheelchair',
+    'parking': 'SquareParking',
+    'wheelchair': 'Accessibility',
     'users-2': 'Users2',
     'book': 'Book',
     'baby': 'Baby',
