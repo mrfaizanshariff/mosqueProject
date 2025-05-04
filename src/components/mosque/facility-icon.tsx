@@ -1,5 +1,6 @@
 import type {  LucideProps } from 'lucide-react'
 import * as LucideIcons from 'lucide-react'
+import type { FC } from 'react';
 
 interface FacilityIconProps extends LucideProps {
   name: string;
@@ -28,7 +29,7 @@ export function FacilityIcon({ name, ...props }: FacilityIconProps) {
   }
   
   // Default to Info icon if the specified icon is not found
-  const IconComponent = LucideIcons[iconMap[name] || 'Info']
+  const IconComponent = LucideIcons[iconMap[name] || 'Info'] as FC<LucideProps>;
   
   return <IconComponent {...props} />
 }
