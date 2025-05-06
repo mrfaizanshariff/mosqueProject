@@ -1,4 +1,4 @@
-import { Mosque } from './types';
+import { Mosque, Prayer } from './types';
 import masjidData from '../../public/assets/masjids-data-updated.json'
 export const mosques: Mosque[] = masjidData 
 
@@ -15,18 +15,16 @@ export const getCurrentPrayer = () => {
   return 'Isha';
 };
 
-export const getNextPrayer = () => {
+export const getNextPrayer = (): Prayer => {
   const current = getCurrentPrayer();
-  
-  switch (current) {
-    case 'Fajr': return 'Dhuhr';
-    case 'Dhuhr': return 'Asr';
-    case 'Asr': return 'Maghrib';
-    case 'Maghrib': return 'Isha';
-    case 'Isha': return 'Fajr';
-    default: return 'Fajr';
-  }
+
+  if (!current) return 'Fajr';
+
+  const prayerOrder: Prayer[] = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+  const nextIndex = (prayerOrder.indexOf(current) + 1) % prayerOrder.length;
+  return prayerOrder[nextIndex];
 };
+
 
 export const getMosqueById = (id: string): Mosque | undefined => {
   return mosques.find(mosque => mosque.id === id);
