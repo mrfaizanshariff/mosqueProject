@@ -26,7 +26,7 @@ export function HeroSection() {
     }
     const fetchTimings = async () => {
       try {
-        const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Mysuru&country=India&method=2');
+        const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Mysuru&country=India&method=1');
         const data = await res.json();
         setTimings(data.data.timings);
         

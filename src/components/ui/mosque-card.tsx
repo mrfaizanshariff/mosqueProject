@@ -1,5 +1,5 @@
 'use client'
-import { Clock, MapPin, Phone } from 'lucide-react'
+import { Clock, ExternalLink, MapPin, Phone } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader } from '../../../components/ui/card'
 import { Mosque } from '../../lib/types'
 import Link from 'next/link'
@@ -20,7 +20,7 @@ export function MosqueCard({ mosque,distance }: MosqueCardProps) {
   const featuredImage = mosque.images[0]
   
   return (
-    <Link href={`/mosques/${mosque.id}`}>
+    
       <motion.div
         whileHover={{ y: -5 }}
         whileTap={{ scale: 0.98 }}
@@ -29,6 +29,7 @@ export function MosqueCard({ mosque,distance }: MosqueCardProps) {
         transition={{ duration: 0.3 }}
       >
         <Card className="overflow-hidden h-full mosque-card border-border/40">
+        <Link href={`/mosques/${mosque.id}`}>
           <CardHeader className="p-0">
             <AspectRatio ratio={16/9}>
               <div className="relative w-full h-full">
@@ -50,15 +51,27 @@ export function MosqueCard({ mosque,distance }: MosqueCardProps) {
               </div>
             </AspectRatio>
           </CardHeader>
+
+         </Link> 
           <CardContent className="pt-4">
+          <Link href={`/mosques/${mosque.id}`}>
             <h3 className="font-bold text-xl mb-2 font-amiri">{mosque.name}
 
-            {distance && <span
-                    className="animate-pulse text-red-500 font-semibold ml-8 ">
-                      {distance.toFixed(2)} KM 
-            </span>}
-            </h3>
            
+            </h3></Link>
+            {distance && <div
+                    className=" flex justify-between items-center my-1 ">
+                     <span className='animate-pulse text-red-500 font-semibold  '>
+                     {distance.toFixed(2)} KM 
+                     </span>
+                     <Button variant={"default"} className='z-30'>
+                      <Link href={mosque.locationURL || ""} target='_blank'>
+                        Directions 
+                      </Link>
+                        <ExternalLink className="h-4 w-4 ml-2" />
+                     </Button>
+            </div>}
+            <Link href={`/mosques/${mosque.id}`}>
             <div className="flex items-center text-sm text-muted-foreground mb-2">
               <MapPin className="h-4 w-4 mr-1" />
               <span>{mosque.address}, {mosque.city}</span>
@@ -89,15 +102,18 @@ export function MosqueCard({ mosque,distance }: MosqueCardProps) {
                 ))}
               </div>
             </div>
+            </Link>
           </CardContent>
+          <Link href={`/mosques/${mosque.id}`}>
           <CardFooter className="pb-4 pt-0">
             <Button variant="secondary" className="w-full">
               View Details
             </Button>
           
           </CardFooter>
+          </Link>
         </Card>
       </motion.div>
-    </Link>
+    
   )
 }
