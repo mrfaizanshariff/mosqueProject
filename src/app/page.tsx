@@ -25,7 +25,7 @@ export default function Home() {
               Find the up-to-date prayer times for mosques in your area. Stay connected with your local community.
             </p>
           </div>
-          
+          <NearbyMosques mosques={mosques} />
           <PrayerTimesTable mosques={mosques} />
           
           <div className="mt-8 text-center">
@@ -36,7 +36,7 @@ export default function Home() {
               </Link>
             </Button>
           </div>
-          <NearbyMosques mosques={mosques} />
+         
         </div>
       </section>
       
