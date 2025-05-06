@@ -27,8 +27,8 @@ export function NearbyMosques({ mosques }: NearbyMosquesProps) {
             const distance = getDistance(
               userLocation.latitude,
               userLocation.longitude,
-              mosque?.location.lat,
-              mosque?.location.lng
+              +mosque?.location.lat,
+              +mosque?.location.lng
             )
             return distance <= radius[0]
         }

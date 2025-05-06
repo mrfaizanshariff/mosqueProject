@@ -12,7 +12,7 @@ export function HeroSection() {
   const [currentPrayer, setCurrentPrayer] = useState<string>('')
   const [nextPrayer, setNextPrayer] = useState<string>('')
   const [currentTime, setCurrentTime] = useState<string>('')
-  
+  const [timings, setTimings] = useState(null);
   useEffect(() => {
     const updateTimes = () => {
       const now = new Date()
@@ -24,7 +24,19 @@ export function HeroSection() {
       setCurrentPrayer(getCurrentPrayer())
       setNextPrayer(getNextPrayer())
     }
+    const fetchTimings = async () => {
+      try {
+        const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Mysuru&country=India&method=2');
+        const data = await res.json();
+        setTimings(data.data.timings);
+        
+
+      } catch (error) {
+        console.error('Error fetching prayer times:', error);
+      }
+    }
     
+    fetchTimings()
     updateTimes()
     const interval = setInterval(updateTimes, 60000)
     
@@ -112,8 +124,60 @@ export function HeroSection() {
               >
                 <div className="flex justify-between items-center">
                   <div>
-                    <h3 className="font-semibold">Current Prayer</h3>
-                    <p className="text-2xl font-bold text-primary">{currentPrayer}</p>
+                    <h3 className="font-semibold">Fajr Prayer Time Start</h3>
+                    <p className="text-2xl font-bold text-primary">{timings?.["Fajr"]}</p>
+                  </div>
+                  <Clock className="h-8 w-8 text-primary" />
+                </div>
+              </motion.div>
+              <motion.div
+                className="bg-primary/10 border border-primary/20 rounded-lg p-4"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-semibold">Dhuhr Prayer Time Start</h3>
+                    <p className="text-2xl font-bold text-primary">{timings?.["Dhuhr"]}</p>
+                  </div>
+                  <Clock className="h-8 w-8 text-primary" />
+                </div>
+              </motion.div>
+              <motion.div
+                className="bg-primary/10 border border-primary/20 rounded-lg p-4"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-semibold">Asr Prayer Time Start</h3>
+                    <p className="text-2xl font-bold text-primary">{timings?.["Asr"]}</p>
+                  </div>
+                  <Clock className="h-8 w-8 text-primary" />
+                </div>
+              </motion.div>
+              <motion.div
+                className="bg-primary/10 border border-primary/20 rounded-lg p-4"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-semibold">Maghrib Prayer Time Start</h3>
+                    <p className="text-2xl font-bold text-primary">{timings?.["Maghrib"]}</p>
+                  </div>
+                  <Clock className="h-8 w-8 text-primary" />
+                </div>
+              </motion.div>
+              <motion.div
+                className="bg-primary/10 border border-primary/20 rounded-lg p-4"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-semibold">Isha Prayer Time Start</h3>
+                    <p className="text-2xl font-bold text-primary">{timings?.["Isha"]}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
@@ -121,6 +185,19 @@ export function HeroSection() {
               
               <Separator />
               
+              <motion.div
+                className="bg-accent/10 border border-accent/20 rounded-lg p-4"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-semibold">Nearest Prayer</h3>
+                    <p className="text-2xl font-bold text-accent">{currentPrayer}</p>
+                  </div>
+                  <MapPin className="h-8 w-8 text-accent" />
+                </div>
+              </motion.div>
               <motion.div
                 className="bg-accent/10 border border-accent/20 rounded-lg p-4"
                 whileHover={{ scale: 1.02 }}
