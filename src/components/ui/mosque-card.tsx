@@ -12,9 +12,10 @@ import { motion } from 'framer-motion'
 
 interface MosqueCardProps {
   mosque: Mosque
+  distance?:number
 }
 
-export function MosqueCard({ mosque }: MosqueCardProps) {
+export function MosqueCard({ mosque,distance }: MosqueCardProps) {
   const currentPrayer = getCurrentPrayer() as keyof typeof mosque.prayerTimes
   const featuredImage = mosque.images[0]
   
@@ -50,8 +51,14 @@ export function MosqueCard({ mosque }: MosqueCardProps) {
             </AspectRatio>
           </CardHeader>
           <CardContent className="pt-4">
-            <h3 className="font-bold text-xl mb-2 font-amiri">{mosque.name}</h3>
-            
+            <h3 className="font-bold text-xl mb-2 font-amiri">{mosque.name}
+
+            {distance && <span
+                    className="animate-pulse text-red-500 font-semibold ml-8 ">
+                      {distance.toFixed(2)} KM 
+            </span>}
+            </h3>
+           
             <div className="flex items-center text-sm text-muted-foreground mb-2">
               <MapPin className="h-4 w-4 mr-1" />
               <span>{mosque.address}, {mosque.city}</span>
@@ -87,6 +94,7 @@ export function MosqueCard({ mosque }: MosqueCardProps) {
             <Button variant="secondary" className="w-full">
               View Details
             </Button>
+          
           </CardFooter>
         </Card>
       </motion.div>

@@ -18,22 +18,50 @@ export function NearbyMosques({ mosques }: NearbyMosquesProps) {
   const [radius, setRadius] = useState([2]) // in kilometers
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
-  
-  const getNearbyMosques = () => {
-    if (!userLocation) return []
+  let distance:number[];
+  // const getNearbyMosques = () => {
+  //   if (!userLocation) return []
     
-    return mosques.filter(mosque => {
-        if(mosque.location?.lat && mosque.location.lng){
-            const distance = getDistance(
-              userLocation.latitude,
-              userLocation.longitude,
-              +mosque?.location.lat,
-              +mosque?.location.lng
-            )
-            return distance <= radius[0]
+  //   return mosques.filter(mosque => {
+  //       if(mosque.location?.lat && mosque.location.lng){
+  //           const distance = getDistance(
+  //             userLocation.latitude,
+  //             userLocation.longitude,
+  //             +mosque?.location.lat,
+  //             +mosque?.location.lng
+  //           )
+  //           return distance <= radius[0]
+  //       }
+  //   })
+  // }
+  const getNearbyMosques = () => {
+    if (!userLocation) return [];
+  
+    // Map each mosque with its distance (if valid lat/lng)
+    const mosquesWithDistance = mosques
+      .map((mosque) => {
+        if (mosque.location?.lat && mosque.location.lng) {
+          const distance = getDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            +mosque.location.lat,
+            +mosque.location.lng
+          );
+          return { mosque, distance };
         }
-    })
-  }
+        return null; // skip invalid locations
+      })
+      .filter((item) => item && item.distance <= radius[0]); // filter by radius
+  
+    // Sort by distance (ascending)
+    mosquesWithDistance.sort((a, b) => a!.distance - b!.distance);
+      
+    // Return just the mosque data (you can keep distance if needed)
+    return mosquesWithDistance.map((item) => ({
+      mosque: item!.mosque,
+      distance: item!.distance,
+    }));
+  };
   
   const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371 // Earth's radius in km
@@ -74,7 +102,7 @@ export function NearbyMosques({ mosques }: NearbyMosquesProps) {
   }
   
   const nearbyMosques = userLocation ? getNearbyMosques() : []
-
+  console.log(nearbyMosques)
   return (
     <section className="py-12 my-4 bg-accent/10">
       <div className="container mx-auto px-4">
@@ -124,8 +152,8 @@ export function NearbyMosques({ mosques }: NearbyMosquesProps) {
                   value={radius}
                   onValueChange={setRadius}
                   max={10}
-                  min={1}
-                  step={0.5}
+                  min={0.5}
+                  step={0.3}
                   className="w-full"
                 />
               </CardContent>
@@ -146,8 +174,8 @@ export function NearbyMosques({ mosques }: NearbyMosquesProps) {
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {nearbyMosques.map((mosque) => (
-                <MosqueCard key={mosque.id} mosque={mosque} />
+              {nearbyMosques.map((item) => (
+                <MosqueCard key={item.mosque.id} mosque={item.mosque} distance={item.distance} />
               ))}
             </div>
           </motion.div>
