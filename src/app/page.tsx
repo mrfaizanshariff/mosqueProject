@@ -15,6 +15,7 @@ export default function Home() {
     <div>
       <HeroSection />
       
+          <NearbyMosques mosques={mosques} />
       <section id="prayer-times" className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
@@ -25,7 +26,6 @@ export default function Home() {
               Find the up-to-date prayer times for mosques in your area. Stay connected with your local community.
             </p>
           </div>
-          <NearbyMosques mosques={mosques} />
           <PrayerTimesTable mosques={mosques} />
           
           <div className="mt-8 text-center">
