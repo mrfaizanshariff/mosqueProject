@@ -79,25 +79,57 @@ export function NearbyMosques({ mosques }: NearbyMosquesProps) {
     return deg * (Math.PI/180)
   }
   
-  const handleGetLocation = () => {
+  const handleGetLocation = async () => {
     setLoading(true)
     setError('')
-    
+
     if (!navigator.geolocation) {
       setError('Geolocation is not supported by your browser')
       setLoading(false)
       return
     }
-    
+
+    // Check for Permissions API support
+    if (navigator.permissions) {
+      try {
+        const status = await navigator.permissions.query({ name: 'geolocation' })
+        if (status.state === 'denied') {
+          setError(
+            'Location access is denied. Please enable location permissions in your browser settings.'
+          )
+          setLoading(false)
+          return
+        }
+      } catch (e) {
+        // Permissions API not available or failed, continue
+      }
+    }
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation(position.coords)
         setLoading(false)
       },
       (error) => {
-        setError('Unable to retrieve your location')
+        // iOS-specific error handling
+        let message = 'Unable to retrieve your location.'
+        if (
+          error.code === error.PERMISSION_DENIED &&
+          /iPad|iPhone|iPod/.test(navigator.userAgent)
+        ) {
+          message =
+            'Location access is denied on your iOS device. Please go to Settings > Safari > Location and allow access.'
+        } else if (error.code === error.PERMISSION_DENIED) {
+          message = 'Location permission denied. Please enable it in your browser settings.'
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          message = 'Location information is unavailable.'
+        } else if (error.code === error.TIMEOUT) {
+          message = 'The request to get your location timed out.'
+        }
+        setError(message)
         setLoading(false)
-      }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     )
   }
   

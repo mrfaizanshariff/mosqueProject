@@ -60,22 +60,37 @@ export function MosqueLocationPicker({ value, onChange }: MosqueLocationPickerPr
     })
     onChange(newCoords)
   }
-  const getCurrentLocation = () => {
+  const getCurrentLocation = async () => {
     setIsGettingLocation(true)
-    
+
     if (!navigator.geolocation) {
       alert('Geolocation is not supported by your browser')
       setIsGettingLocation(false)
       return
     }
-    
+
+    // Check for Permissions API support
+    if (navigator.permissions) {
+      try {
+        const status = await navigator.permissions.query({ name: 'geolocation' })
+        if (status.state === 'denied') {
+          alert(
+            'Location access is denied. Please enable location permissions in your browser settings.'
+          )
+          setIsGettingLocation(false)
+          return
+        }
+      } catch (e) {
+        // Permissions API not available or failed, continue
+      }
+    }
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const newLocation = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         }
-        
         setCoordinates({
           lat: newLocation.lat.toString(),
           lng: newLocation.lng.toString(),
@@ -84,9 +99,24 @@ export function MosqueLocationPicker({ value, onChange }: MosqueLocationPickerPr
         setIsGettingLocation(false)
       },
       (error) => {
-        alert('Unable to retrieve your location')
+        let message = 'Unable to retrieve your location.'
+        if (
+          error.code === error.PERMISSION_DENIED &&
+          /iPad|iPhone|iPod/.test(navigator.userAgent)
+        ) {
+          message =
+            'Location access is denied on your iOS device. Please go to Settings > Safari > Location and allow access.'
+        } else if (error.code === error.PERMISSION_DENIED) {
+          message = 'Location permission denied. Please enable it in your browser settings.'
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          message = 'Location information is unavailable.'
+        } else if (error.code === error.TIMEOUT) {
+          message = 'The request to get your location timed out.'
+        }
+        alert(message)
         setIsGettingLocation(false)
-      }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     )
   }
 
