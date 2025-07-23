@@ -22,10 +22,6 @@ import { PrayerTimePicker } from '../../components/mosque/prayer-time-picker'
 const formSchema = z.object({
   mosqueName: z.string().optional(),
   otherMosqueName: z.string().optional(),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zipCode: z.string().optional(),
   phone: z.string().optional(),
   email: z.string().email().optional().or(z.literal('')),
   website: z.string().url().optional().or(z.literal('')),
@@ -35,10 +31,11 @@ const formSchema = z.object({
   }),
   prayerTimes: z.object({
     Fajr: z.string().min(1, 'Fajr time is required'),
-    Dhuhr: z.string().min(1, 'Dhuhr time is required'),
+    Zuhar: z.string().min(1, 'Zuhar time is required'),
     Asr: z.string().min(1, 'Asr time is required'),
     Maghrib: z.string().min(1, 'Maghrib time is required'),
     Isha: z.string().min(1, 'Isha time is required'),
+    Jummah: z.string().min(1, 'Jummah time is required'),
   }),
   facilities: z.array(z.string()),
   description: z.string().optional(),
@@ -50,19 +47,13 @@ const availableFacilities = [
   { id: 'wudu', name: 'Wudu Area', icon: 'droplets' },
   { id: 'women-prayer', name: "Women's Prayer Space", icon: 'users' },
   { id: 'library', name: 'Library', icon: 'book-open' },
-  { id: 'school', name: 'Weekend School', icon: 'school' },
-  { id: 'parking', name: 'Parking', icon: 'parking' },
+  { id: 'c-school', name: 'Children Deen School', icon: 'school' },
+  { id: 'dd-school', name: 'Addult Deen School', icon: 'school' },
+  { id: 'two-parking', name: 'Two Wheeler Parking', icon: 'parking' },
+  { id: 'car-parking', name: 'Car Parking', icon: 'parking' },
   { id: 'wheelchair', name: 'Wheelchair Access', icon: 'wheelchair' },
   { id: 'community-hall', name: 'Community Hall', icon: 'users-2' },
-  { id: 'bookstore', name: 'Bookstore', icon: 'book' },
-  { id: 'childcare', name: 'Childcare', icon: 'baby' },
-  { id: 'kitchen', name: 'Community Kitchen', icon: 'utensils' },
   { id: 'funeral', name: 'Funeral Services', icon: 'heart-handshake' },
-  { id: 'youth-center', name: 'Youth Center', icon: 'users-2' },
-  { id: 'counseling', name: 'Counseling Services', icon: 'heart' },
-  { id: 'food-pantry', name: 'Halal Food Pantry', icon: 'shopping-basket' },
-  { id: 'garden', name: 'Community Garden', icon: 'flower' },
-  { id: 'health-clinic', name: 'Health Clinic', icon: 'stethoscope' },
   { id: 'sports', name: 'Sports Facilities', icon: 'dumbbell' },
 ]
 
@@ -75,10 +66,6 @@ export default function SubmitMosquePage() {
     defaultValues: {
       mosqueName: '',
       otherMosqueName: '',
-      address: '',
-      city: '',
-      state: '',
-      zipCode: '',
       phone: '',
       email: '',
       website: '',
@@ -88,10 +75,11 @@ export default function SubmitMosquePage() {
       },
       prayerTimes: {
         Fajr: '',
-        Dhuhr: '',
+        Zuhar: '',
         Asr: '',
         Maghrib: '',
         Isha: '',
+        Jummah:'',
       },
       facilities: [],
       description: '',
@@ -100,7 +88,13 @@ export default function SubmitMosquePage() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true)
-    
+    const res = await fetch('/api/sent-to-sheets', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000))
     
@@ -237,62 +231,7 @@ export default function SubmitMosquePage() {
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="address"
-                        render={({ field }) => (
-                          <FormItem className="md:col-span-2">
-                            <FormLabel>Address</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Street address" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="city"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>City</FormLabel>
-                            <FormControl>
-                              <Input placeholder="City" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="state"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>State</FormLabel>
-                            <FormControl>
-                              <Input placeholder="State" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="zipCode"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>ZIP Code</FormLabel>
-                            <FormControl>
-                              <Input placeholder="ZIP Code" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
+                     
                       <FormField
                         control={form.control}
                         name="phone"
@@ -384,10 +323,11 @@ export default function SubmitMosquePage() {
                       onChange={(prayerTimes) => form.setValue('prayerTimes', prayerTimes)}
                       errors={{
                         Fajr: form.formState.errors.prayerTimes?.Fajr?.message,
-                        Dhuhr: form.formState.errors.prayerTimes?.Dhuhr?.message,
+                        Zuhar: form.formState.errors.prayerTimes?.Zuhar?.message,
                         Asr: form.formState.errors.prayerTimes?.Asr?.message,
                         Maghrib: form.formState.errors.prayerTimes?.Maghrib?.message,
                         Isha: form.formState.errors.prayerTimes?.Isha?.message,
+                        Jummah: form.formState.errors.prayerTimes?.Jummah?.message,
                       }}
                     />
                   </CardContent>

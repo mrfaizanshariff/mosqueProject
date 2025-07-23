@@ -26,7 +26,7 @@ export function PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTable
     return () => clearInterval(interval)
   }, [])
 
-  const prayers: Prayer[] = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
+  const prayers: Prayer[] = ['Fajr', 'Zuhar', 'Asr', 'Maghrib', 'Isha', 'Jummah']
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCity, setSelectedCity] = useState<string>('All')

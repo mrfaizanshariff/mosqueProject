@@ -30,19 +30,21 @@ export function PrayerTimeCard({ prayer, time }: PrayerTimeCardProps) {
   // Prayer time background colors
   const bgColors = {
     Fajr: 'bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800',
-    Dhuhr: 'bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800',
+    Zuhar: 'bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800',
     Asr: 'bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800',
     Maghrib: 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800',
     Isha: 'bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800',
+    Jummah: 'bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800',
   }
   
   // Prayer time text colors
   const textColors = {
     Fajr: 'text-blue-700 dark:text-blue-300',
-    Dhuhr: 'text-yellow-700 dark:text-yellow-300',
+    Zuhar: 'text-yellow-700 dark:text-yellow-300',
     Asr: 'text-orange-700 dark:text-orange-300',
     Maghrib: 'text-red-700 dark:text-red-300',
     Isha: 'text-purple-700 dark:text-purple-300',
+    Jummah: 'text-green-700 dark:text-green-300',
   }
 
   return (

@@ -58,7 +58,7 @@ export default function MosqueDetailPage({ params }: { params: { id: string } })
     notFound()
   }
   
-  const prayers: Prayer[] = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
+  const prayers: Prayer[] = ['Fajr', 'Zuhar', 'Asr', 'Maghrib', 'Isha']
   const importantAnnouncement = mosque.announcements.find(a => a.isImportant)
 
   return (

@@ -1,4 +1,4 @@
-export type Prayer = 'Fajr' | 'Dhuhr' | 'Asr' | 'Maghrib' | 'Isha';
+export type Prayer = 'Fajr' | 'Zuhar' | 'Asr' | 'Maghrib' | 'Isha' | 'Jummah';
 
 export type PrayerTimes = {
   [key in Prayer]: string;

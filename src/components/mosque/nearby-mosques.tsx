@@ -136,7 +136,7 @@ export function NearbyMosques({ mosques }: NearbyMosquesProps) {
   const nearbyMosques = userLocation ? getNearbyMosques() : []
   console.log(nearbyMosques)
   return (
-    <section className="py-12 my-4 bg-accent/10">
+    <section id="nearbymosque" className="py-12 my-4 bg-accent/10">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

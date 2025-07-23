@@ -91,6 +91,9 @@
 .font-amiri {
   font-family: var(--font-amiri), serif;
 }
+* {
+    scroll-behavior: smooth;
+}
 
 .font-sans {
   font-family: var(--font-noto-sans), sans-serif;

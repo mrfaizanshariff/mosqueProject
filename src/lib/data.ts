@@ -9,7 +9,8 @@ export const getCurrentPrayer = () => {
   const currentTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   
   // This is a simplified approach and should be replaced with actual calculation  if (currntTime < '06:00') return 'Fajr';
-  if (currentTime < '14:00') return 'Dhuhr';
+  if (currentTime < '6:45') return 'Fajr';
+  if (currentTime < '14:00') return 'Zuhar';
   if (currentTime < '17:30') return 'Asr';
   if (currentTime < '20:00') return 'Maghrib';
   return 'Isha';
@@ -20,8 +21,8 @@ export const getNextPrayer = (): Prayer => {
 
   if (!current) return 'Fajr';
 
-  const prayerOrder: Prayer[] = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-  const nextIndex = (prayerOrder.indexOf(current) + 1) % prayerOrder.length;
+  const prayerOrder: Prayer[] = ['Fajr', 'Zuhar', 'Asr', 'Maghrib', 'Isha','Jummah'];
+  const nextIndex = (prayerOrder.indexOf(current) + 1) % (prayerOrder.length-1);
   return prayerOrder[nextIndex];
 };
 

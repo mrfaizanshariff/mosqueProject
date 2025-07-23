@@ -7,6 +7,7 @@ import { Clock, MapPin, ArrowRight } from 'lucide-react'
 import { getCurrentPrayer, getNextPrayer } from '../../lib/data'
 import { Separator } from '../../../components/ui/separator'
 import Link from 'next/link'
+import {convert24HourToMinutes, convert24To12Hour} from '../../lib/utils'
 
 export function HeroSection() {
   const [currentPrayer, setCurrentPrayer] = useState<string>('')
@@ -28,6 +29,7 @@ export function HeroSection() {
       try {
         const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Mysuru&country=India&method=1');
         const data = await res.json();
+
         setTimings(data.data.timings);
         
 
@@ -97,6 +99,11 @@ export function HeroSection() {
                   View Prayer Times
                 </Link>
               </Button>
+              <Button variant="outline" size="lg" asChild>
+                <Link href="#nearbymosque">
+                  Find Near By Mosue
+                </Link>
+              </Button>
             </div>
           </motion.div>
           
@@ -125,7 +132,7 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Fajr Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings?.["Fajr"]}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Fajr'] ? convert24To12Hour(timings?.["Fajr"]):''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
@@ -137,8 +144,8 @@ export function HeroSection() {
               >
                 <div className="flex justify-between items-center">
                   <div>
-                    <h3 className="font-semibold">Dhuhr Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings?.["Dhuhr"]}</p>
+                    <h3 className="font-semibold">Zuhar Prayer Time Start</h3>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Zuhar'] ? convert24To12Hour(timings?.["Zuhar"]):''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
@@ -151,7 +158,7 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Asr Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings?.["Asr"]}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Asr'] ? convert24To12Hour(timings?.["Asr"]):''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
@@ -164,7 +171,7 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Maghrib Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings?.["Maghrib"]}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Maghrib'] ? convert24To12Hour(timings?.["Maghrib"]):''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
@@ -177,7 +184,7 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Isha Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings?.["Isha"]}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Isha'] ? convert24To12Hour(timings?.["Isha"]):''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>

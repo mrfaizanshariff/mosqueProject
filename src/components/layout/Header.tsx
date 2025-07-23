@@ -36,6 +36,7 @@ const Header = () => {
     { href: '/mosques', label: 'Mosques' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
+    { href: '/submit-mosque', label: 'Add mosque' },
   ]
 
   return (

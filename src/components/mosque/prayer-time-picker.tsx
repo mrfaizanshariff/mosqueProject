@@ -56,7 +56,7 @@ const convertTo12Hour = (time24: string): TimeState => {
 export function PrayerTimePicker({ value, onChange, errors }: PrayerTimePickerProps) {
   const [timeStates, setTimeStates] = useState<Record<Prayer, TimeState>>(() => {
     const initial: Record<Prayer, TimeState> = {} as Record<Prayer, TimeState>
-    const prayers: Prayer[] = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
+    const prayers: Prayer[] = ['Fajr', 'Zuhar', 'Asr', 'Maghrib', 'Isha', 'Jummah']
     prayers.forEach(prayer => {
       initial[prayer] = convertTo12Hour(value[prayer])
     })
@@ -65,10 +65,11 @@ export function PrayerTimePicker({ value, onChange, errors }: PrayerTimePickerPr
 
   const prayers: { name: Prayer; label: string; color: string }[] = [
     { name: 'Fajr', label: 'Fajr (Dawn)', color: 'border-blue-200 bg-blue-50 dark:bg-blue-950/30' },
-    { name: 'Dhuhr', label: 'Dhuhr (Noon)', color: 'border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30' },
+    { name: 'Zuhar', label: 'Zuhar (Noon)', color: 'border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30' },
     { name: 'Asr', label: 'Asr (Afternoon)', color: 'border-orange-200 bg-orange-50 dark:bg-orange-950/30' },
     { name: 'Maghrib', label: 'Maghrib (Sunset)', color: 'border-red-200 bg-red-50 dark:bg-red-950/30' },
     { name: 'Isha', label: 'Isha (Night)', color: 'border-purple-200 bg-purple-50 dark:bg-purple-950/30' },
+    { name: 'Jummah', label: 'Jummah (Friday)', color: 'border-green-200 bg-green-50 dark:bg-green-950/30' },
   ]
 
   const handleTimeChange = (prayer: Prayer, field: 'hour' | 'minute' | 'period', newValue: string) => {
