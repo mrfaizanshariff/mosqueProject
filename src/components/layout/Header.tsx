@@ -7,6 +7,7 @@ import { useTheme } from 'next-themes'
 import { Button } from '../../../components/ui/button'
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetTrigger,
 } from '../../../components/ui/sheet'
@@ -20,11 +21,11 @@ const Header = () => {
   // For client-side rendering
   useEffect(() => {
     setMounted(true)
-    
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
     }
-    
+
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -40,11 +41,11 @@ const Header = () => {
   ]
 
   return (
-    <header 
+    <header
       className={cn(
         'sticky top-0 z-50 w-full transition-all duration-300',
-        isScrolled 
-          ? 'bg-background/95 backdrop-blur-sm shadow-sm' 
+        isScrolled
+          ? 'bg-background/95 backdrop-blur-sm shadow-sm'
           : 'bg-transparent'
       )}
     >
@@ -54,11 +55,11 @@ const Header = () => {
             <Clock className="h-6 w-6 text-primary" />
             <span className="font-amiri text-xl md:text-2xl font-bold">Mosques of India</span>
           </Link>
-          
+
           <nav className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => (
-              <Link 
-                key={link.href} 
+              <Link
+                key={link.href}
                 href={link.href}
                 className="text-sm font-medium transition-colors hover:text-primary"
               >
@@ -66,7 +67,7 @@ const Header = () => {
               </Link>
             ))}
           </nav>
-          
+
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
@@ -80,7 +81,7 @@ const Header = () => {
                 <Moon className="h-5 w-5" />
               )}
             </Button>
-            
+
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon">
@@ -91,13 +92,14 @@ const Header = () => {
               <SheetContent side="right" className="w-[80%] sm:w-[350px]">
                 <div className="flex flex-col space-y-4 mt-8">
                   {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="text-lg font-medium py-2 hover:text-primary transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    <SheetClose asChild key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-lg font-medium py-2 hover:text-primary transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    </SheetClose>
                   ))}
                 </div>
               </SheetContent>

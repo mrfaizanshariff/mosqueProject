@@ -145,7 +145,7 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Zuhar Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings && timings['Zuhar'] ? convert24To12Hour(timings?.["Zuhar"]):''}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Dhuhr'] ? convert24To12Hour(timings?.["Dhuhr"]):''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
