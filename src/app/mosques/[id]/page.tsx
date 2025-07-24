@@ -104,7 +104,32 @@ export default function MosqueDetailPage({ params }: { params: { id: string } })
                 </div>
               </div>
             </div>
-            
+            <div className='mb-8'>
+             <Card className="border-border/40">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xl">Location</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* <MosqueLocation location={mosque.location} name={mosque.name} /> */}
+                
+                <Button 
+                  className="w-full mt-4" 
+                  variant="outline"
+                  asChild
+                >
+                  <a 
+                    href={mosque.locationURL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Get Directions
+                    <ExternalLink className="h-4 w-4 ml-2" />
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+
+            </div>
             <Tabs defaultValue="prayer-times" className="mb-10">
               <TabsList className="mb-4 w-full md:w-auto">
                 <TabsTrigger value="prayer-times">Prayer Times</TabsTrigger>
