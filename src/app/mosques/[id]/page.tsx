@@ -58,7 +58,7 @@ export default function MosqueDetailPage({ params }: { params: { id: string } })
     notFound()
   }
   
-  const prayers: Prayer[] = ['Fajr', 'Zuhar', 'Asr', 'Maghrib', 'Isha']
+  const prayers: Prayer[] = ['Fajr', 'Zuhar', 'Asr', 'Maghrib', 'Isha','Jummah']
   const importantAnnouncement = mosque.announcements.find(a => a.isImportant)
 
   return (
@@ -260,29 +260,7 @@ export default function MosqueDetailPage({ params }: { params: { id: string } })
               </CardContent>
             </Card>
             
-            <Card className="border-border/40">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl">Location</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {/* <MosqueLocation location={mosque.location} name={mosque.name} /> */}
-                
-                <Button 
-                  className="w-full mt-4" 
-                  variant="outline"
-                  asChild
-                >
-                  <a 
-                    href={mosque.locationURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Get Directions
-                    <ExternalLink className="h-4 w-4 ml-2" />
-                  </a>
-                </Button>
-              </CardContent>
-            </Card>
+         
             
             <Card className="border-border/40">
               <CardHeader className="pb-2">

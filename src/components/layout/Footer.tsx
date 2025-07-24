@@ -28,7 +28,7 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="font-bold text-lg mb-4">Resources</h3>
+            <h3 className="font-bold text-lg mb-4">Upcoming Products</h3>
             <ul className="space-y-2">
               <li><Link href="/prayer-guide" className="text-sm hover:text-primary transition-colors">Prayer Guide</Link></li>
               <li><Link href="/qibla-finder" className="text-sm hover:text-primary transition-colors">Qibla Finder</Link></li>
@@ -41,7 +41,7 @@ const Footer = () => {
             <h3 className="font-bold text-lg mb-4">Contact</h3>
             <ul className="space-y-2">
               <li className="text-sm">Email: mohammed.faizan@xenolve.com</li>
-              <li className="text-sm">Phone: +91 733-800-6388</li>
+              <li className="text-sm">Email: mohammed.maaz@xenolve.com</li>
               <li className="text-sm">Address: Mysore,Karnataka</li>
             </ul>
           </div>
@@ -55,7 +55,10 @@ const Footer = () => {
           </p>
           <p className="text-sm text-muted-foreground flex items-center">
             Made with <Heart className="h-4 w-4 text-destructive mx-1" /> for the Muslim community
-            by <Link href={"www.xenolve.com"} target='_blank'>Xenolve</Link>
+            by 
+            <span className="text-primary text-xl bold">
+            <Link href="https://www.xenolve.com" target='_blank' rel='noopener noreferrer'>&#8209; Xenolve</Link>
+            </span>
           </p>
         </div>
       </div>

@@ -60,7 +60,7 @@ const useMosquesData = () => {
 
 const formSchema = z.object({
   mosqueName: z.string().min(1, 'Please select a mosque'),
-  otherMosqueName: z.string().min(1, 'Please enter the mosque name'),
+  otherMosqueName: z.string(),
   phone: z.string().optional(),
   email: z.string().email().optional().or(z.literal('')),
   website: z.string().optional().or(z.literal('')),
@@ -106,7 +106,22 @@ type MosqueSelectionCardProps = {
   loadMosques: () => void
   loading: boolean
 }
-
+const handleChekboxChange = (setUseOtherMosque: any, form: any) => (checked: boolean) => {
+  setUseOtherMosque(checked);
+  if (checked) {
+    // Make 'otherMosqueName' required and clear 'mosqueName' value/validation
+    form.setValue('mosqueName', '');
+    form.clearErrors('mosqueName');
+    form.setValue('otherMosqueName', '');
+    form.setError('otherMosqueName', { type: 'required', message: 'Please enter the mosque name' });
+  } else {
+    // Make 'mosqueName' required and clear 'otherMosqueName' value/validation
+    form.setValue('otherMosqueName', '');
+    form.clearErrors('otherMosqueName');
+    form.setValue('mosqueName', '');
+    form.setError('mosqueName', { type: 'required', message: 'Please select a mosque' });
+  }
+}
 const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques, loadMosques, loading }: MosqueSelectionCardProps) => (
   <Card>
     <CardHeader>
@@ -120,7 +135,7 @@ const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques,
         <Checkbox
           id="use-other"
           checked={useOtherMosque}
-          onCheckedChange={setUseOtherMosque}
+          onCheckedChange={handleChekboxChange(setUseOtherMosque,form)}
         />
         <Label htmlFor="use-other">
           Select this if your mosque is not listed, and you want to enter its details manually.

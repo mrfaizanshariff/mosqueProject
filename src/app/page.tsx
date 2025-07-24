@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/button'
 import { Search, MapPin, Clock, Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { NearbyMosques } from '../components/mosque/nearby-mosques'
+import { QuranQuoteSwitcher } from '../components/features/quran-verse'
 
 export default function Home() {
   // Only show 3 mosques on the homepage
@@ -14,7 +15,9 @@ export default function Home() {
   return (
     <div>
       <HeroSection />
-      
+      <div className='mx-4'>
+      <QuranQuoteSwitcher />
+      </div>
           <NearbyMosques mosques={mosques} />
       <section id="prayer-times" className="py-20 bg-background">
         <div className="container mx-auto px-4">

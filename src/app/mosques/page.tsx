@@ -75,7 +75,7 @@ export default function MosquesPage() {
         
         <Separator className="my-8" />
         
-        <div className="grid grid-cols-1 md:grid-cols-2 h-[70%] overflow-auto lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 md:h-[40vw] h-[100vw] overflow-auto lg:grid-cols-3 gap-8">
           {paginatedData.map((mosque) => (
             <MosqueCard key={mosque.id} mosque={mosque} />
           ))}
