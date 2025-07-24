@@ -1,6 +1,6 @@
 'use client'
 
-import { convert24To12Hour} from '../../lib/utils'
+
 import { useState, useEffect } from 'react'
 import { Button } from '../../../components/ui/button'
 import { motion } from 'framer-motion'
@@ -8,7 +8,15 @@ import { Clock, MapPin, ArrowRight } from 'lucide-react'
 import { getCurrentPrayer, getNextPrayer } from '../../lib/data'
 import { Separator } from '../../../components/ui/separator'
 import Link from 'next/link'
-console.log('Utils import:', { convert24To12Hour });
+
+export function convert24To12Hour(time24: string): string {
+  if (!/^\d{1,2}:\d{2}$/.test(time24)) return time24; // Return as is if format is invalid
+  let [hour, minute] = time24.split(":").map(Number);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+  return `${hour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+}
 
 export function HeroSection() {
   const [currentPrayer, setCurrentPrayer] = useState<string>('')
