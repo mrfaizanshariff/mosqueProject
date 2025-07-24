@@ -13,7 +13,7 @@ interface PrayerTimesTableProps {
   rowsPerPage?: number; 
 }
 
-export function PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTableProps) {
+export function   PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTableProps) {
   const [currentPrayer, setCurrentPrayer] = useState<Prayer | null>(null)
 
   useEffect(() => {
