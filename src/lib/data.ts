@@ -21,7 +21,7 @@ export const getNextPrayer = (): Prayer => {
 
   if (!current) return 'Fajr';
 
-  const prayerOrder: Prayer[] = ['Fajr', 'Zuhar', 'Asr', 'Maghrib', 'Isha','Jummah'];
+  const prayerOrder: Prayer[] = ['Fajr', 'Zuhar', 'Asr', 'Maghrib', 'Isha'];
   const nextIndex = (prayerOrder.indexOf(current) + 1) % (prayerOrder.length-1);
   return prayerOrder[nextIndex];
 };

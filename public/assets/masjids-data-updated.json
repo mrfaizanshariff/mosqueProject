@@ -8998,5 +8998,80 @@
             "lat": "12.3167851",
             "lng": "76.6490431"
         }
+    },
+     {
+        "id": "121",
+        "name": "Rifah Masjid",
+        "address": "8J8X+PJ7, Sayyaji Rao Rd, Medar Block, Yadavagiri, Mysuru, Karnataka 570001",
+        "city": "Bangalore",
+        "state": "Karnataka",
+        "zipCode": "570001",
+        "phone": "(555) 123-4567",
+        "email": "info@indianmosques.com",
+        "website": "https://www.indianmosques.com",
+        "locationURL": "https://www.google.co.in/maps/place/Rifah+Masjid/data=!4m7!3m6!1s0x3baf7073b124f623:0x2e471af8cd2515c9!8m2!3d12.3167851!4d76.6490431!16s%2Fg%2F11h0kc4js!19sChIJI_YksXNwrzsRyRUlzfgaRy4?authuser=0&hl=en&rclk=1",
+        "prayerTimes": {
+            "Fajr": "05:30",
+            "Zuhar": "13:15",
+            "Asr": "16:45",
+            "Maghrib": "19:30",
+            "Isha": "21:00",
+"Jummah":"13:30"
+        },
+        "facilities": [
+            {
+                "id": "120-1",
+                "name": "Wudu Area",
+                "icon": "droplets"
+            },
+            {
+                "id": "120-2",
+                "name": "Women's Prayer Space",
+                "icon": "users"
+            },
+            {
+                "id": "120-3",
+                "name": "Library",
+                "icon": "book-open"
+            },
+            {
+                "id": "120-4",
+                "name": "Weekend School",
+                "icon": "school"
+            },
+            {
+                "id": "120-5",
+                "name": "Parking",
+                "icon": "parking"
+            },
+            {
+                "id": "120-6",
+                "name": "Wheelchair Access",
+                "icon": "wheelchair"
+            }
+        ],
+        "images": [
+            {
+                "id": "120-1",
+                "url": "https://images.unsplash.com/photo-1684453728323-a8c2e5b615eb?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "alt": "Masjid Al-Noor exterior view",
+                "width": 1200,
+                "height": 800
+            }
+        ],
+        "announcements": [
+            {
+                "id": "1-1",
+                "title": "Ramadan Prayer Schedule",
+                "content": "Join us for Taraweeh prayers every night during Ramadan starting at 9:30 PM.",
+                "date": "2023-03-01",
+                "isImportant": true
+            }
+        ],
+        "description": "Masjid Al-Noor is one of the oldest and largest Islamic centers in the city, serving the Muslim community since 1975. The mosque offers a wide range of services including daily prayers, educational programs, and community events.",
+        "location": {
+            "lat": "12.3167851",
+            "lng": "76.6490431"
+        }
     }
 ]

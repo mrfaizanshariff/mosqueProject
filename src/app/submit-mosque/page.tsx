@@ -40,26 +40,33 @@ const PrayerTimePicker = dynamic(
 const useMosquesData = () => {
   const [mosques, setMosques] = useState<Mosque[]>([])
   const [loading, setLoading] = useState(false)
+  const [city, setSelectedCity] = useState("Mysuru")
 
+  const setCity = useCallback((city: string) => {
+    setSelectedCity(city)
+    setMosques([]) // Reset mosques when city changes
+  }, [])
   const loadMosques = useCallback(async () => {
     if (mosques.length > 0) return // Already loaded
     
     setLoading(true)
     try {
       const { mosques: mosquesData } = await import('../../lib/data')
-      setMosques(mosquesData)
+      const filteredMosques = mosquesData.filter(mosque => mosque.city === city)
+      setMosques(filteredMosques)
     } catch (error) {
       console.error('Failed to load mosques:', error)
     } finally {
       setLoading(false)
     }
-  }, [mosques.length])
+  }, [mosques.length, city])
 
-  return { mosques, loading, loadMosques }
+  return { mosques, loading, loadMosques,setCity }
 }
 
 const formSchema = z.object({
-  mosqueName: z.string().min(1, 'Please select a mosque'),
+  city : z.string().min(1, 'City is required'),
+  mosqueName: z.string(),
   otherMosqueName: z.string(),
   phone: z.string().optional(),
   email: z.string().email().optional().or(z.literal('')),
@@ -104,25 +111,29 @@ type MosqueSelectionCardProps = {
   form: ReturnType<typeof useForm<FormData>>
   mosques: any[]
   loadMosques: () => void
-  loading: boolean
+  setCity: (city: string) => void
+  loading: boolean,
+  cities: string[],
 }
-const handleChekboxChange = (setUseOtherMosque: any, form: any) => (checked: boolean) => {
+const handleChekboxChange = (setUseOtherMosque: any, form: any) => async (checked: boolean) => {
   setUseOtherMosque(checked);
   if (checked) {
-    // Make 'otherMosqueName' required and clear 'mosqueName' value/validation
+    // Switch to 'otherMosqueName' mode
     form.setValue('mosqueName', '');
     form.clearErrors('mosqueName');
     form.setValue('otherMosqueName', '');
-    form.setError('otherMosqueName', { type: 'required', message: 'Please enter the mosque name' });
+    form.clearErrors('otherMosqueName');
+    await form.trigger('otherMosqueName');
   } else {
-    // Make 'mosqueName' required and clear 'otherMosqueName' value/validation
+    // Switch to 'mosqueName' mode
     form.setValue('otherMosqueName', '');
     form.clearErrors('otherMosqueName');
     form.setValue('mosqueName', '');
-    form.setError('mosqueName', { type: 'required', message: 'Please select a mosque' });
+    form.clearErrors('mosqueName');
+    await form.trigger('mosqueName');
   }
 }
-const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques, loadMosques, loading }: MosqueSelectionCardProps) => (
+const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques, loadMosques, loading,cities,setCity }: MosqueSelectionCardProps) => (
   <Card>
     <CardHeader>
       <CardTitle className="flex items-center">
@@ -131,6 +142,42 @@ const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques,
       </CardTitle>
     </CardHeader>
     <CardContent className="space-y-6">
+      
+       <div>
+        <FormField
+          control={form.control}
+          name="city"
+          render={({ field }) => (
+            <FormItem>
+               <FormLabel>Select City</FormLabel>
+              <Select 
+                onValueChange={(value) => { field.onChange(value); setCity(value); }} 
+                defaultValue={"Mysuru"}
+                // onOpenChange={(open) => open && loadMosques()}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select The City" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {loading ? (
+                    <div className="p-2 text-center">Loading cities...</div>
+                  ) : (
+                    cities.map((city,index) => (
+                      <SelectItem key={city+index} value={String(city ?? '')}>
+                        {city}
+                      </SelectItem>
+                    ))
+                  )
+                  }
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+          />
+       </div>
       <div className="flex items-center space-x-2">
         <Checkbox
           id="use-other"
@@ -163,12 +210,15 @@ const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques,
                   {loading ? (
                     <div className="p-2 text-center">Loading mosques...</div>
                   ) : (
+                    mosques.length === 0 ? (
+                      <div className="p-2 text-center">No mosques found in this city. Please select "Other" to add a new mosque.</div>
+                    ) : (
                     mosques.map((mosque: { id: Key | null | undefined; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | PromiseLikeOfReactNode | null | undefined; city: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | PromiseLikeOfReactNode | null | undefined; state: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | PromiseLikeOfReactNode | null | undefined }) => (
                       <SelectItem key={mosque.id} value={String(mosque.name ?? '')}>
                         {mosque.name} - {mosque.city}, {mosque.state}
                       </SelectItem>
                     ))
-                  )}
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -176,6 +226,8 @@ const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques,
           )}
         />
       ) : (
+
+       <div>
         <FormField
           control={form.control}
           name="otherMosqueName"
@@ -188,7 +240,25 @@ const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques,
               <FormMessage />
             </FormItem>
           )}
-        />
+          />
+          
+            <FormField
+                  control={form.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Select Location on Map or If you are at the mosque select your current location</FormLabel>
+                      <FormControl>
+                        <MosqueLocationPicker
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+       </div>
       )}
     </CardContent>
   </Card>
@@ -312,12 +382,13 @@ const FacilitiesCard = ({ form }: FacilitiesCardProps) => (
 export default function SubmitMosquePage() {
   const [useOtherMosque, setUseOtherMosque] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const { mosques, loading, loadMosques } = useMosquesData()
+  const { mosques, loading, loadMosques, setCity } = useMosquesData()
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: 'onBlur', // Less frequent validation
     defaultValues: {
+      city:'',
       mosqueName: '',
       otherMosqueName: '',
       phone: '',
@@ -375,9 +446,11 @@ export default function SubmitMosquePage() {
       form={form}
       mosques={mosques}
       loadMosques={loadMosques}
+      setCity={setCity}
       loading={loading}
+      cities={['Mysuru', 'Bangalore', 'Hyderabad', 'Chennai', 'Mumbai']} // Example cities, replace with actual data
     />
-  ), [useOtherMosque, form, mosques, loadMosques, loading])
+  ), [useOtherMosque, form, mosques, loadMosques, loading,setCity])
 
   const contactInfoCard = useMemo(() => (
     <ContactInfoCard form={form} />
@@ -411,33 +484,7 @@ export default function SubmitMosquePage() {
             {/* Contact Information */}
             {contactInfoCard}
 
-            {/* Location Picker */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <MapPin className="h-5 w-5 mr-2 text-primary" />
-                  Mosque Location
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name="location"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Select Location on Map or If you are at the mosque select your current location</FormLabel>
-                      <FormControl>
-                        <MosqueLocationPicker
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+            
 
             {/* Prayer Times */}
             <Card>
@@ -583,3 +630,5 @@ export default function SubmitMosquePage() {
     </div>
   )
 }
+
+
