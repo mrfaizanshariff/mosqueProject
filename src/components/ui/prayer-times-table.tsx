@@ -70,7 +70,7 @@ export function   PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTab
              <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[200px] font-medium">Mosque</TableHead>
+                <TableHead className="w-[200px] sticky left-0 bg-white font-medium">Mosque</TableHead>
                 {prayers.map((prayer) => (
                   <TableHead 
                     key={prayer} 
@@ -95,7 +95,7 @@ export function   PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTab
                   key={mosque.id}
                   className="hover:bg-muted/50 transition-colors"
                 >
-                  <TableCell className="font-medium">
+                  <TableCell className="font-medium sticky left-0 bg-white ">
                     <Link 
                       href={`/mosques/${mosque.id}`}
                       className="hover:text-primary text-blue-400 transition-colors hover:underline"
