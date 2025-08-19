@@ -7,14 +7,23 @@ import { Search, MapPin, Clock, Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { NearbyMosques } from '../components/mosque/nearby-mosques'
 import { QuranQuoteSwitcher } from '../components/features/quran-verse'
+import { PrayerTimingsProvider } from '../context/PrayerTimingsContext'
+import { CityProvider } from '../context/CityContext'
+import CitySelection from '../components/features/city-selection'
 
 export default function Home() {
   // Only show 3 mosques on the homepage
   const featuredMosques = mosques.slice(0, 3)
 
   return (
+     
     <div>
-      <HeroSection />
+      <div className=' pattern-bg '>
+       
+          <CitySelection />
+        
+      </div>
+        <HeroSection />
       <div className='mx-4'>
       <QuranQuoteSwitcher />
       </div>
@@ -29,8 +38,7 @@ export default function Home() {
               Find the up-to-date prayer times for mosques in your area. Stay connected with your local community.
             </p>
           </div>
-          <PrayerTimesTable mosques={mosques} />
-          
+          <PrayerTimesTable mosques={mosques} />          
           <div className="mt-8 text-center">
             <Button asChild>
               <Link href="/mosques">
@@ -56,7 +64,9 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredMosques.map((mosque) => (
+             
               <MosqueCard key={mosque.id} mosque={mosque} />
+              
             ))}
           </div>
           
@@ -116,5 +126,6 @@ export default function Home() {
         </div>
       </section>
     </div>
+    
   )
 }

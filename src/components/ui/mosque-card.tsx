@@ -9,6 +9,7 @@ import { Badge } from '../../../components/ui/badge'
 import { Button } from '../../../components/ui/button'
 import { getCurrentPrayer } from '../../lib/data'
 import { motion } from 'framer-motion'
+import { usePrayerTimings } from '../../context/PrayerTimingsContext'
 
 interface MosqueCardProps {
   mosque: Mosque
@@ -16,7 +17,9 @@ interface MosqueCardProps {
 }
 
 export function MosqueCard({ mosque,distance }: MosqueCardProps) {
-  const currentPrayer = getCurrentPrayer() as keyof typeof mosque.prayerTimes
+    const { timings, currentPrayer, nextPrayer, loading, error } = usePrayerTimings();
+  
+  // const currentPrayer = getCurrentPrayer() as keyof typeof mosque.prayerTimes
   const featuredImage = mosque.images[0]
   
   return (
@@ -87,7 +90,7 @@ export function MosqueCard({ mosque,distance }: MosqueCardProps) {
             <div className="mt-4">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-sm font-medium">Current Prayer ({currentPrayer}):</span>
-                <span className="text-primary font-semibold">{mosque.prayerTimes[currentPrayer]}</span>
+                <span className="text-primary font-semibold">{mosque.prayerTimes[currentPrayer as keyof typeof mosque.prayerTimes]}</span>
               </div>
               
               <div className="grid grid-cols-4 gap-1 mt-3">

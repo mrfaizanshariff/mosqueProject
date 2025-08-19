@@ -8,6 +8,7 @@ import { MosqueCard } from '../../components/ui/mosque-card'
 import { Mosque } from '../../lib/types'
 import { MapPin, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { PrayerTimingsProvider } from '../../context/PrayerTimingsContext'
 
 interface NearbyMosquesProps {
   mosques: Mosque[]
@@ -207,7 +208,10 @@ export function NearbyMosques({ mosques }: NearbyMosquesProps) {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {nearbyMosques.map((item) => (
+                 
+
                 <MosqueCard key={item.mosque.id} mosque={item.mosque} distance={item.distance} />
+                
               ))}
             </div>
           </motion.div>

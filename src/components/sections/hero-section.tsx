@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react'
 import { Button } from '../../../components/ui/button'
 import { motion } from 'framer-motion'
 import { Clock, MapPin, ArrowRight } from 'lucide-react'
-import { getCurrentPrayer, getNextPrayer } from '../../lib/data'
 import { Separator } from '../../../components/ui/separator'
 import Link from 'next/link'
+import { usePrayerTimings } from '../../context/PrayerTimingsContext'
+import { useCity } from '../../context/CityContext'
 
 export function convert24To12Hour(time24: string): string {
   if (!/^\d{1,2}:\d{2}$/.test(time24)) return time24; // Return as is if format is invalid
@@ -19,10 +20,9 @@ export function convert24To12Hour(time24: string): string {
 }
 
 export function HeroSection() {
-  const [currentPrayer, setCurrentPrayer] = useState<string>('')
-  const [nextPrayer, setNextPrayer] = useState<string>('')
+  const { timings, currentPrayer, nextPrayer, loading, error } = usePrayerTimings();
+  const { city } = useCity() // Assuming useCity is defined in your context
   const [currentTime, setCurrentTime] = useState<string>('')
-  const [timings, setTimings] = useState(null);
   useEffect(() => {
     const updateTimes = () => {
       const now = new Date()
@@ -31,23 +31,7 @@ export function HeroSection() {
         minute: '2-digit',
         hour12: true
       }))
-      setCurrentPrayer(getCurrentPrayer())
-      setNextPrayer(getNextPrayer())
     }
-    const fetchTimings = async () => {
-      try {
-        const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Mysuru&country=India&method=1');
-        const data = await res.json();
-
-        setTimings(data.data.timings);
-        
-
-      } catch (error) {
-        console.error('Error fetching prayer times:', error);
-      }
-    }
-    
-    fetchTimings()
     updateTimes()
     const interval = setInterval(updateTimes, 60000)
     
@@ -78,10 +62,11 @@ export function HeroSection() {
   }
 
   return (
+    
     <div className="relative w-full min-h-[80vh] pattern-bg flex items-center">
       <div className="container mx-auto px-4 py-24 md:py-32">
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center"
+          className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -128,7 +113,7 @@ export function HeroSection() {
               >
                 <Clock className="h-10 w-10 mx-auto text-primary mb-3" />
               </motion.div>
-              <h2 className="font-amiri text-2xl font-bold">Prayer Times</h2>
+              <h2 className="font-amiri text-2xl font-bold">Prayer Times - {city ? city : 'India'}</h2>
               <p className="text-muted-foreground">Current time: {currentTime}</p>
             </div>
             

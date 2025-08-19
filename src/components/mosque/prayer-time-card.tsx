@@ -6,6 +6,7 @@ import { Prayer } from '../../lib/types'
 import { Clock } from 'lucide-react'
 import { cn } from '../../../lib/utils'
 import { getCurrentPrayer } from '../../lib/data'
+import { usePrayerTimings } from '../../context/PrayerTimingsContext'
 
 interface PrayerTimeCardProps {
   prayer: Prayer
@@ -14,11 +15,10 @@ interface PrayerTimeCardProps {
 
 export function PrayerTimeCard({ prayer, time }: PrayerTimeCardProps) {
   const [isCurrentPrayer, setIsCurrentPrayer] = useState(false)
-  
+  const { timings, currentPrayer, nextPrayer, loading, error } = usePrayerTimings();
   useEffect(() => {
     const checkCurrentPrayer = () => {
-      const current = getCurrentPrayer() as Prayer
-      setIsCurrentPrayer(current === prayer)
+      setIsCurrentPrayer(currentPrayer === prayer)
     }
     
     checkCurrentPrayer()

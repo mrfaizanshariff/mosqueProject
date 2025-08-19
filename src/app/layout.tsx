@@ -4,6 +4,8 @@ import { Amiri, Noto_Sans } from 'next/font/google';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { ThemeProvider } from '../components/providers/ThemeProvider';
+import { CityProvider } from '../context/CityContext';
+import { PrayerTimingsProvider } from '../context/PrayerTimingsContext';
 
 const amiri = Amiri({ 
   subsets: ['arabic'],
@@ -38,7 +40,13 @@ export default function RootLayout({
         >
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow">
+            <CityProvider>
+              <PrayerTimingsProvider>
+              {children}
+              </PrayerTimingsProvider>
+            </CityProvider>
+              </main>
             <Footer />
           </div>
         </ThemeProvider>

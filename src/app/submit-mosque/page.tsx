@@ -145,39 +145,6 @@ const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques,
     <CardContent className="space-y-6">
       
        <div>
-        {/* <FormField
-          control={form.control}
-          name="city"
-          render={({ field }) => (
-            <FormItem>
-               <FormLabel>Select City</FormLabel>
-              <Select 
-                onValueChange={(value) => { field.onChange(value); setCity(value); }} 
-                defaultValue={""}
-                // onOpenChange={(open) => open && loadMosques()}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select The City" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {loading ? (
-                    <div className="p-2 text-center">Loading cities...</div>
-                  ) : (
-                    cities.map((city,index) => (
-                      <SelectItem key={city+index} value={String(city ?? '')}>
-                        {city}
-                      </SelectItem>
-                    ))
-                  )
-                  }
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-          /> */}
           <FormField
         control={form.control}
         name="city"
@@ -230,6 +197,9 @@ const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques,
         }}
       />
        </div>
+       {form.getValues('city').length>0 && (
+
+      <div>
       <div className="flex items-center space-x-2">
         <Checkbox
           id="use-other"
@@ -240,186 +210,155 @@ const MosqueSelectionCard = ({ useOtherMosque, setUseOtherMosque, form, mosques,
           Select this if your mosque is not listed, and you want to enter its details manually.
         </Label>
       </div>
-
-      {!useOtherMosque ? (
-        // <FormField
-        //   control={form.control}
-        //   name="mosqueName"
-        //   render={({ field }) => (
-        //     <FormItem>
-        //       <FormLabel>Select Mosque</FormLabel>
-        //       <Select 
-        //         onValueChange={field.onChange} 
-        //         defaultValue={field.value}
-        //         onOpenChange={(open) => open && loadMosques()}
-        //       >
-        //         <FormControl>
-        //           <SelectTrigger>
-        //             <SelectValue placeholder="Search and select a mosque" />
-        //           </SelectTrigger>
-        //         </FormControl>
-        //         <SelectContent>
-        //           {loading ? (
-        //             <div className="p-2 text-center">Loading mosques...</div>
-        //           ) : (
-        //             mosques.length === 0 ? (
-        //               <div className="p-2 text-center">No mosques found in this city. Please select "Other" to add a new mosque.</div>
-        //             ) : (
-        //             mosques.map((mosque: { id: Key | null | undefined; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | PromiseLikeOfReactNode | null | undefined; city: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | PromiseLikeOfReactNode | null | undefined; state: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | PromiseLikeOfReactNode | null | undefined }) => (
-        //               <SelectItem key={mosque.id} value={String(mosque.name ?? '')}>
-        //                 {mosque.name} - {mosque.city}, {mosque.state}
-        //               </SelectItem>
-        //             ))
-        //           ))}
-        //         </SelectContent>
-        //       </Select>
-        //       <FormMessage />
-        //     </FormItem>
-        //   )}
-        // />
-        <FormField
-  control={form.control}
-  name="mosqueName"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Select Mosque</FormLabel>
-      <FormControl>
-        <div className="relative">
-          <Autocomplete
-            // react-hook-form wiring
-            value={field.value ?? ''}
-            onChange={(val) => {
-              field.onChange(val);
-            }}
-            onBlur={field.onBlur}
-            name={field.name}
-            ref={field.ref}
-
-            // data
-            options={mosques.map((m) => ({
-              id: String(m.id ?? m.name ?? Math.random()),
-              label: String(m.name ?? ''),
-              value: String(m.id ?? ''), // optional separate value if needed
-              // You can carry extra fields if your render needs them
-             
-              city: String(m.city ?? ''),
-             
-              state: String(m.state ?? ''),
-            }))}
-
-            // open and load on focus (equivalent to onOpenChange={open && loadMosques()})
-            onFocus={() => {
-              if (!loading) loadMosques();
-            }}
-
-            placeholder={loading ? 'Loading mosques...' : 'Search and select a mosque'}
-
-            // how each option is displayed in the popup
-            getOptionLabel={(opt) => opt.label}
-
-            renderOption={(opt, active) => (
-              <div className="flex flex-col">
-                <span className="font-medium">{opt.label}</span>
-                <span className="text-xs text-muted-foreground">
-                  {/* @ts-expect-error extra fields carried above */}
-                  {opt.city}, {/* @ts-expect-error */}
-                  {opt.state}
-                </span>
-              </div>
-            )}
-
-            // customize filtering: match on name, city, or state
-            filterOptions={(opts, input) => {
-              const q = input.trim().toLowerCase();
-              if (!q) return opts;
-              return opts.filter((o) => {
-                const name = o.label.toLowerCase();
-                const city = (o as any).city?.toLowerCase?.() ?? '';
-                const state = (o as any).state?.toLowerCase?.() ?? '';
-                return (
-                  name.includes(q) ||
-                  city.includes(q) ||
-                  state.includes(q)
-                );
-              });
-            }}
-
-            // when user selects an option, commit to the form field
-            onSelect={(opt) => {
-              // Store the mosque name in the form field (same as your SelectItem value).
-              field.onChange(opt.label);
-
-              // If you prefer to store mosque ID instead, use:
-              // field.onChange(opt.value);
-
-              // If you also track selected mosque locally, set state here:
-              // setMosqueName(opt.label);
-            }}
-
-            // style matches your Input classes
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background
-                       placeholder:text-muted-foreground
-                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                       disabled:cursor-not-allowed disabled:opacity-50"
-            popperClassName="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-input bg-popover text-popover-foreground shadow-md"
-            optionClassName="cursor-pointer select-none px-3 py-2 text-sm"
-            emptyText={
-              loading
-                ? 'Loading mosques...'
-                : mosques.length === 0
-                  ? 'No mosques found in this city. Please select "Other" to add a new mosque.'
-                  : 'No results'
-            }
-          />
-
-          {/* Inline loading hint (optional) */}
-          {loading && (
-            <div className="pointer-events-none absolute right-2 top-2 text-xs text-muted-foreground">
-              Loading…
-            </div>
-          )}
-        </div>
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
-      ) : (
-
-       <div>
-        <FormField
+        { !useOtherMosque ? (
+                <FormField
           control={form.control}
-          name="otherMosqueName"
+          name="mosqueName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mosque Name</FormLabel>
+              <FormLabel>Select Mosque</FormLabel>
               <FormControl>
-                <Input placeholder="Enter mosque name" {...field} />
+                <div className="relative">
+                  <Autocomplete
+                    // react-hook-form wiring
+                    value={field.value ?? ''}
+                    onChange={(val) => {
+                      field.onChange(val);
+                    }}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+
+                    // data
+                    options={mosques.map((m) => ({
+                      id: String(m.id ?? m.name ?? Math.random()),
+                      label: String(m.name ?? ''),
+                      value: String(m.id ?? ''), // optional separate value if needed
+                      // You can carry extra fields if your render needs them
+                    
+                      city: String(m.city ?? ''),
+                    
+                      state: String(m.state ?? ''),
+                    }))}
+
+                    // open and load on focus (equivalent to onOpenChange={open && loadMosques()})
+                    onFocus={() => {
+                      if (!loading) loadMosques();
+                    }}
+
+                    placeholder={loading ? 'Loading mosques...' : 'Search and select a mosque'}
+
+                    // how each option is displayed in the popup
+                    getOptionLabel={(opt) => opt.label}
+
+                    renderOption={(opt, active) => (
+                      <div className="flex flex-col">
+                        <span className="font-medium">{opt.label}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {/* @ts-expect-error extra fields carried above */}
+                          {opt.city}, {/* @ts-expect-error */}
+                          {opt.state}
+                        </span>
+                      </div>
+                    )}
+
+                    // customize filtering: match on name, city, or state
+                    filterOptions={(opts, input) => {
+                      const q = input.trim().toLowerCase();
+                      if (!q) return opts;
+                      return opts.filter((o) => {
+                        const name = o.label.toLowerCase();
+                        const city = (o as any).city?.toLowerCase?.() ?? '';
+                        const state = (o as any).state?.toLowerCase?.() ?? '';
+                        return (
+                          name.includes(q) ||
+                          city.includes(q) ||
+                          state.includes(q)
+                        );
+                      });
+                    }}
+
+                    // when user selects an option, commit to the form field
+                    onSelect={(opt) => {
+                      // Store the mosque name in the form field (same as your SelectItem value).
+                      field.onChange(opt.label);
+
+                      // If you prefer to store mosque ID instead, use:
+                      // field.onChange(opt.value);
+
+                      // If you also track selected mosque locally, set state here:
+                      // setMosqueName(opt.label);
+                    }}
+
+                    // style matches your Input classes
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background
+                              placeholder:text-muted-foreground
+                              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                              disabled:cursor-not-allowed disabled:opacity-50"
+                    popperClassName="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-input bg-popover text-popover-foreground shadow-md"
+                    optionClassName="cursor-pointer select-none px-3 py-2 text-sm"
+                    emptyText={
+                      loading
+                        ? 'Loading mosques...'
+                        : mosques.length === 0
+                          ? 'No mosques found in this city. Please select "Other" to add a new mosque.'
+                          : 'No results'
+                    }
+                  />
+
+                  {/* Inline loading hint (optional) */}
+                  {loading && (
+                    <div className="pointer-events-none absolute right-2 top-2 text-xs text-muted-foreground">
+                      Loading…
+                    </div>
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
-          />
-          
-            <FormField
+        />
+
+              ) : (
+
+              <div>
+                <FormField
                   control={form.control}
-                  name="location"
+                  name="otherMosqueName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Select Location on Map or If you are at the mosque select your current location</FormLabel>
+                      <FormLabel>Mosque Name</FormLabel>
                       <FormControl>
-                        <MosqueLocationPicker
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
+                        <Input placeholder="Enter mosque name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
-                />
-       </div>
-      )}
+                  />
+                  
+                    <FormField
+                          control={form.control}
+                          name="location"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Select Location on Map or If you are at the mosque select your current location</FormLabel>
+                              <FormControl>
+                                <MosqueLocationPicker
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+              </div>
+              )}
+      </div>
+       )
+       }
+
+      
     </CardContent>
   </Card>
 )
@@ -608,7 +547,7 @@ export default function SubmitMosquePage() {
       loadMosques={loadMosques}
       setCity={setCity}
       loading={loading}
-      cities={['Mysuru', 'Bangalore', 'Hyderabad', 'Chennai', 'Mumbai']} // Example cities, replace with actual data
+      cities={['Mysuru', 'Bengaluru', 'Hyderabad', 'Chennai', 'Mumbai']} // Example cities, replace with actual data
     />
   ), [useOtherMosque, form, mosques, loadMosques, loading,setCity])
 

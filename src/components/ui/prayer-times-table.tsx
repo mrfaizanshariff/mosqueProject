@@ -7,6 +7,8 @@ import { Mosque, Prayer } from '../../lib/types'
 import { getCurrentPrayer } from '../../lib/data'
 import { cn } from '../../../lib/utils'
 import Link from 'next/link'
+import { usePrayerTimings } from '../../context/PrayerTimingsContext'
+import { useCity } from '../../context/CityContext'
 
 interface PrayerTimesTableProps {
   mosques: Mosque[];
@@ -14,25 +16,16 @@ interface PrayerTimesTableProps {
 }
 
 export function   PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTableProps) {
-  const [currentPrayer, setCurrentPrayer] = useState<Prayer | null>(null)
-
-  useEffect(() => {
-    setCurrentPrayer(getCurrentPrayer() as Prayer)
-    
-    const interval = setInterval(() => {
-      setCurrentPrayer(getCurrentPrayer() as Prayer)
-    }, 60000) // Update every minute
-    
-    return () => clearInterval(interval)
-  }, [])
-
+  const { timings, currentPrayer, nextPrayer, loading, error } = usePrayerTimings();
+  const {city}= useCity()
+ 
   const prayers: Prayer[] = ['Fajr', 'Zuhar', 'Asr', 'Maghrib', 'Isha', 'Jummah']
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCity, setSelectedCity] = useState<string>('All')
+  // const [selectedCity, setSelectedCity] = useState<string>('All')
   const uniqueCities = Array.from(new Set(mosques.map(m => m.city))).sort()
   const filteredData = mosques.filter((row) => {
-    const matchesCity = selectedCity === 'All' || row.city === selectedCity
+    const matchesCity = row.city === city
     const matchesSearch = Object.values(row).some((val) =>
       val?.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -57,7 +50,7 @@ export function   PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTab
                   }}
                 />
 
-            <select
+            {/* <select
               className="p-2 border rounded h-full w-full sm:w-1/2"
               value={selectedCity}
               onChange={(e) => {
@@ -71,9 +64,10 @@ export function   PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTab
                   {city}
                 </option>
               ))}
-            </select>
+            </select> */}
               </div>
-          <Table>
+          {paginatedData.length > 0 ? (
+             <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[200px] font-medium">Mosque</TableHead>
@@ -124,6 +118,13 @@ export function   PrayerTimesTable({ mosques,rowsPerPage = 10  }: PrayerTimesTab
               ))}
             </TableBody>
           </Table>
+          )
+          :
+          ( <div className="text-center text-muted-foreground p-4">
+                  No data available for the selected city, Please scroll up and select a different city
+            </div>
+          )}
+         
 
           <div className="flex justify-between items-center pt-2">
         <button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>

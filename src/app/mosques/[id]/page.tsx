@@ -24,6 +24,8 @@ import { PrayerTimeCard } from '../../../components/mosque/prayer-time-card'
 import { MosqueImageGallery } from '../../../components/mosque/mosque-image-gallery'
 import { MosqueAnnouncementBanner } from '../../../components/mosque/mosque-announcement-banner'
 import { MosqueLocation } from '../../../components/mosque/mosque-location'
+import { PrayerTimingsProvider } from '../../../context/PrayerTimingsContext'
+import { CityProvider } from '../../../context/CityContext'
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const mosque:any = getMosqueById(params.id)
@@ -141,11 +143,17 @@ export default function MosqueDetailPage({ params }: { params: { id: string } })
               <TabsContent value="prayer-times" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {prayers.map((prayer) => (
+                    
+
+                    
+
                     <PrayerTimeCard
                       key={prayer}
                       prayer={prayer}
                       time={mosque.prayerTimes[prayer]}
-                    />
+                      />
+                     
+                     
                   ))}
                 </div>
               </TabsContent>

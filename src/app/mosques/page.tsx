@@ -6,6 +6,8 @@ import { Mosque } from '../../lib/icon'
 import { Info } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '../../../components/ui/button'
+import { PrayerTimingsProvider } from '../../context/PrayerTimingsContext'
+import { useCity } from '../../context/CityContext'
 
 // export const metadata = {
 //   title: 'Mosques Directory | Mosques of India',
@@ -17,11 +19,11 @@ export default function MosquesPage() {
   const rowsPerPage =10;
    const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-
-    const [selectedCity, setSelectedCity] = useState<string>('All')
-    const uniqueCities = Array.from(new Set(mosques.map(m => m.city))).sort()
+  const {city} = useCity()
+    // const [selectedCity, setSelectedCity] = useState<string>('All')
+    // const uniqueCities = Array.from(new Set(mosques.map(m => m.city))).sort()
     const filteredData = mosques.filter((row) => {
-      const matchesCity = selectedCity === 'All' || row.city === selectedCity
+      const matchesCity = row.city === city
       const matchesSearch = Object.values(row).some((val) =>
         val?.toString().toLowerCase().includes(searchTerm.toLowerCase())
       )
@@ -36,7 +38,7 @@ export default function MosquesPage() {
         <div className="text-center mb-12">
           <Mosque className="h-16 w-16 mx-auto text-primary mb-4" />
           <h1 className="font-amiri text-4xl md:text-5xl font-bold mb-4">
-            Mosques Directory
+            Mosques Directory - {city}
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Browse our comprehensive directory of mosques and find prayer times, facilities, 
@@ -55,7 +57,7 @@ export default function MosquesPage() {
                   }}
                 />
 
-            <select
+            {/* <select
               className="p-2 border rounded h-full w-full sm:w-1/2"
               value={selectedCity}
               onChange={(e) => {
@@ -69,7 +71,7 @@ export default function MosquesPage() {
                   {city}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
         </div>
         
@@ -77,7 +79,11 @@ export default function MosquesPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 md:h-[40vw] h-[100vw] overflow-auto lg:grid-cols-3 gap-8">
           {paginatedData.map((mosque) => (
-            <MosqueCard key={mosque.id} mosque={mosque} />
+           
+           
+              <MosqueCard key={mosque.id} mosque={mosque} />
+           
+            
           ))}
         </div>
           <div className="flex justify-around items-center pt-2">

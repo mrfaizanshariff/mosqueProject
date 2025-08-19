@@ -159,14 +159,14 @@ const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps>(
     const handleBlur = (e: React.FocusEvent) => {
       // Close only when focus moves outside both input and list
       // Using timeout to allow click on options
-      setTimeout(() => {
+     
         const el = document.activeElement;
         const root = containerRef.current;
         if (!root || !el || !root.contains(el)) {
           setOpen(false);
           setActiveIndex(-1);
         }
-      }, 0);
+      e.stopPropagation(); // prevent blur from closing immediately
     };
 
     const containerRef = React.useRef<HTMLDivElement | null>(null);
