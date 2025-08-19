@@ -31,7 +31,7 @@ const convertTo24Hour = (time12: TimeState): string => {
 }
 
 const convertTo12Hour = (time24: string): TimeState => {
-  if (!time24) return { hour: '12', minute: '00', period: 'AM' }
+  if (!time24) return { hour: '1', minute: '00', period: 'AM' }
   
   const [hour24, minute] = time24.split(':')
   let hour = parseInt(hour24)
