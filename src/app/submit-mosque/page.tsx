@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo, JSXElementConstructor, Key, PromiseLikeOfReactNode, ReactElement, ReactNode, ReactPortal } from 'react'
+import { useState, useCallback, useMemo, JSXElementConstructor, Key, PromiseLikeOfReactNode, ReactElement, ReactNode, ReactPortal, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -558,6 +558,24 @@ export default function SubmitMosquePage() {
   const facilitiesCard = useMemo(() => (
     <FacilitiesCard form={form} />
   ), [form])
+
+  // Close keyboard on mobile/touch when tapping outside input
+  useEffect(() => {
+    const handleTouchStart = (event: TouchEvent) => {
+      const active = document.activeElement as HTMLElement | null;
+      if (
+        active &&
+        (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA') &&
+        !active.contains(event.target as Node)
+      ) {
+        active.blur();
+      }
+    };
+    document.addEventListener('touchstart', handleTouchStart, true);
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart, true);
+    };
+  }, []);
 
   return (
     <div className="py-12 md:py-20">
