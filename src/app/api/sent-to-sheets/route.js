@@ -5,7 +5,35 @@ import { google } from 'googleapis';
 
 export async function POST(request) {
   try {
-    const body = await request.json();
+    // Parse multipart form data
+    const contentType = request.headers.get('content-type') || '';
+    let fields = {};
+    let images = [];
+
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData();
+      // Extract fields and images
+      for (const [key, value] of formData.entries()) {
+       if (key === 'images' && typeof value === 'object' && value && typeof value.arrayBuffer === 'function') {
+  images.push(value);
+} else {
+          // Try to parse JSON fields (location, prayerTimes, facilities)
+          if (['location', 'prayerTimes', 'facilities'].includes(key)) {
+            try {
+              fields[key] = JSON.parse(value);
+            } catch {
+              fields[key] = value;
+            }
+          } else {
+            fields[key] = value;
+          }
+        }
+      }
+    } else {
+      // fallback to JSON body
+      fields = await request.json();
+    }
+
     const {
       mosqueName,
       otherMosqueName,
@@ -16,10 +44,12 @@ export async function POST(request) {
       prayerTimes,
       facilities,
       description,
-    } = body;
-    
+      city
+    } = fields;
+
     const values = [
       [
+        city || '',
         mosqueName || '',
         otherMosqueName || '',
         phone || '',
@@ -35,6 +65,7 @@ export async function POST(request) {
         prayerTimes?.Jummah || '00:00',
         facilities && Array.isArray(facilities) ? facilities.join(', ') : '',
         description || '',
+        images.length > 0 ? images.map((img, i) => img.name).join(', ') : '', // Store image names (or URLs if uploaded elsewhere)
       ],
     ];
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo, JSXElementConstructor, Key, PromiseLikeOfReactNode, ReactElement, ReactNode, ReactPortal, useEffect } from 'react'
+import { useState, useCallback, useMemo, JSXElementConstructor, Key, PromiseLikeOfReactNode, ReactElement, ReactNode, ReactPortal, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -478,9 +478,61 @@ const FacilitiesCard = ({ form }: FacilitiesCardProps) => (
   </Card>
 )
 
+const ImageUploadSection = ({ images, setImages }: { images: File[]; setImages: React.Dispatch<React.SetStateAction<File[]>> }) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      // Append new files to existing images
+      setImages((prev:File[]) => [...prev, ...Array.from(e.target.files!)]);
+    }
+  };
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <Plus className="h-5 w-5 mr-2 text-primary" />
+          Upload Mosque Images
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          capture="environment"
+          style={{ display: 'none' }}
+          onChange={handleFilesChange}
+        />
+        <Button type="button" onClick={handleButtonClick} className="mb-4">
+          Upload or Take Photos
+        </Button>
+        <div className="flex flex-wrap gap-4">
+          {images.map((file, idx) => (
+            <div key={idx} className="w-24 h-24 rounded overflow-hidden border border-border/40 bg-muted flex items-center justify-center">
+              <img
+                src={URL.createObjectURL(file)}
+                alt={`Mosque Image ${idx + 1}`}
+                className="object-cover w-full h-full"
+              />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 export default function SubmitMosquePage() {
   const [useOtherMosque, setUseOtherMosque] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [images, setImages] = useState<File[]>([]);
   const { mosques, loading, loadMosques, setCity } = useMosquesData()
 
   const form = useForm<FormData>({
@@ -513,29 +565,36 @@ export default function SubmitMosquePage() {
   const onSubmit = useCallback(async (data: FormData) => {
     setIsSubmitting(true)
     try {
+      // Prepare form data for images
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (typeof value === 'object' && value !== null && !(value instanceof File)) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value as string);
+        }
+      });
+      images.forEach((file, idx) => {
+        formData.append('images', file);
+      });
       const res = await fetch('/api/sent-to-sheets', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: formData,
       })
-
       const result = await res.json()
-
       if (!res.ok) {
         throw new Error(result.detail || result.error || 'Failed to submit')
       }
-
       alert('Mosque data submitted successfully!')
       form.reset()
+      setImages([])
     } catch (error) {
       console.error('Submission error:', error)
       alert('Failed to submit. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
-  }, [form])
+  }, [form, images])
 
   // Memoize form sections to prevent unnecessary re-renders
   const mosqueSelectionCard = useMemo(() => (
@@ -601,7 +660,8 @@ export default function SubmitMosquePage() {
             {/* Contact Information */}
             {contactInfoCard}
 
-            
+            {/* Image Upload Section */}
+            <ImageUploadSection images={images} setImages={setImages} />
 
             {/* Prayer Times */}
             <Card>
