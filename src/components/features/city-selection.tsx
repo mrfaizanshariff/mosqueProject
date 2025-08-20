@@ -2,20 +2,13 @@
 import React from "react";
 import { useCity } from "../../context/CityContext";
 import { Autocomplete } from "../../../components/ui/auto-complete";
+import { cities } from '../../lib/data'
+
 // import Autocomplete from your UI library or local component
 // import { Autocomplete } from 'your-autocomplete-path';
 
 export default function CitySelection() {
   const { city, setCity } = useCity();
-  const cities = [
-    "Mysuru",
-    "Bengaluru",
-    "Hyderabad",
-    "Chennai",
-    "Mumbai",
-    "Delhi",
-  ]; // Example cities, replace with actual data
-  
   return (
     <div className="px-4 pt-8 w-full md:pt-12 md:w-[50%] mx-auto">
       <h1 className="font-amiri text-4xl md:text-5xl font-bold">Please Select the City</h1>

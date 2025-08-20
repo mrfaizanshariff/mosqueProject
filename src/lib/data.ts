@@ -1,5 +1,8 @@
 import { Mosque, Prayer } from './types';
 import masjidData from '../../public/assets/masjids-data-updated.json'
+import Majorcities from '../../public/assets/cities-data.json'
+
+export const cities: any = Majorcities;
 export const mosques: Mosque[] = masjidData 
 
 export function convert24To12Hour(time24: string): string {

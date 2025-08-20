@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { MapPin, Clock, Building, CheckSquare, FileText, Plus } from 'lucide-react'
 import { Mosque } from '../../lib/types'
 import { Autocomplete } from '../../../components/ui/auto-complete'
+import { cities } from '../../lib/data'
 // Dynamic imports for heavy components
 const MosqueLocationPicker = dynamic(
   () => import('../../components/mosque/mosque-location-picker').then(mod => ({ 
@@ -481,15 +482,29 @@ const FacilitiesCard = ({ form }: FacilitiesCardProps) => (
 const ImageUploadSection = ({ images, setImages }: { images: File[]; setImages: React.Dispatch<React.SetStateAction<File[]>> }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      // Append new files to existing images
-      setImages((prev:File[]) => [...prev, ...Array.from(e.target.files!)]);
+  // Prompt user for camera or gallery on mobile
+  const handleButtonClick = () => {
+    if (typeof window !== 'undefined' && window.navigator && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      // Show a prompt for camera or gallery
+      const useCamera = window.confirm('Do you want to take a new photo? Click OK for Camera, Cancel for Gallery.');
+      if (fileInputRef.current) {
+        if (useCamera) {
+          fileInputRef.current.setAttribute('capture', 'environment');
+        } else {
+          fileInputRef.current.removeAttribute('capture');
+        }
+        fileInputRef.current.click();
+      }
+    } else {
+      // Desktop: just open file picker
+      fileInputRef.current?.click();
     }
   };
 
-  const handleButtonClick = () => {
-    fileInputRef.current?.click();
+  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImages((prev: File[]) => [...prev, ...Array.from(e.target.files!)]);
+    }
   };
 
   return (
@@ -506,7 +521,6 @@ const ImageUploadSection = ({ images, setImages }: { images: File[]; setImages: 
           type="file"
           accept="image/*"
           multiple
-          capture="environment"
           style={{ display: 'none' }}
           onChange={handleFilesChange}
         />
@@ -606,9 +620,9 @@ export default function SubmitMosquePage() {
       loadMosques={loadMosques}
       setCity={setCity}
       loading={loading}
-      cities={['Mysuru', 'Bengaluru', 'Hyderabad', 'Chennai', 'Mumbai']} // Example cities, replace with actual data
+      cities={cities}
     />
-  ), [useOtherMosque, form, mosques, loadMosques, loading,setCity])
+  ), [useOtherMosque, form, mosques, loadMosques, loading, setCity])
 
   const contactInfoCard = useMemo(() => (
     <ContactInfoCard form={form} />
@@ -636,8 +650,19 @@ export default function SubmitMosquePage() {
     };
   }, []);
 
+  // Loader overlay component
+  const LoaderOverlay = () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="flex flex-col items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+        <span className="text-white text-lg font-semibold">Please Wait We are Submitting Your Form...</span>
+      </div>
+    </div>
+  );
+
   return (
     <div className="py-12 md:py-20">
+      {isSubmitting && <LoaderOverlay />}
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Simple header without animations */}
         <div className="text-center mb-12">

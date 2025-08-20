@@ -3,6 +3,14 @@ export const dynamic = 'force-dynamic';
 
 import { google } from 'googleapis';
 
+import { v2 as cloudinary } from 'cloudinary';
+// Cloudinary config (using env vars)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 export async function POST(request) {
   try {
     // Parse multipart form data
@@ -47,6 +55,19 @@ export async function POST(request) {
       city
     } = fields;
 
+      const uploadedImageUrls = [];
+    for (const img of images) {
+      const buffer = Buffer.from(await img.arrayBuffer());
+      const uploadRes = await new Promise((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream({ folder: 'mosques' }, (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+          })
+          .end(buffer);
+      });
+      uploadedImageUrls.push(uploadRes.secure_url);
+    }
     const values = [
       [
         city || '',
@@ -65,7 +86,7 @@ export async function POST(request) {
         prayerTimes?.Jummah || '00:00',
         facilities && Array.isArray(facilities) ? facilities.join(', ') : '',
         description || '',
-        images.length > 0 ? images.map((img, i) => img.name).join(', ') : '', // Store image names (or URLs if uploaded elsewhere)
+        uploadedImageUrls.join(', '),  // Store image names (or URLs if uploaded elsewhere)
       ],
     ];
 
@@ -121,6 +142,7 @@ export async function POST(request) {
     return Response.json({ 
       success: true, 
       result: response.data,
+      uploadedImages: uploadedImageUrls,
       message: 'Data successfully added to Google Sheets'
     });
 
