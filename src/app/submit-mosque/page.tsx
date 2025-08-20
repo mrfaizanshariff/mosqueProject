@@ -486,7 +486,7 @@ const ImageUploadSection = ({ images, setImages }: { images: File[]; setImages: 
   const handleButtonClick = () => {
     if (typeof window !== 'undefined' && window.navigator && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       // Show a prompt for camera or gallery
-      const useCamera = window.confirm('Do you want to take a new photo? Click OK for Camera, Cancel for Gallery.');
+      const useCamera = window.confirm('Select OK for Camera, Cancel for Gallery.');
       if (fileInputRef.current) {
         if (useCamera) {
           fileInputRef.current.setAttribute('capture', 'environment');
@@ -655,7 +655,7 @@ export default function SubmitMosquePage() {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="flex flex-col items-center">
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
-        <span className="text-white text-lg font-semibold">Please Wait We are Submitting Your Form...</span>
+        <span className="text-white text-lg font-semibold">Please Wait, Submitting Your Data...</span>
       </div>
     </div>
   );
