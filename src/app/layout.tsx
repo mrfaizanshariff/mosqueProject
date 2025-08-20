@@ -6,7 +6,7 @@ import Footer from '../components/layout/Footer';
 import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { CityProvider } from '../context/CityContext';
 import { PrayerTimingsProvider } from '../context/PrayerTimingsContext';
-
+import { Analytics } from "@vercel/analytics/next"
 const amiri = Amiri({ 
   subsets: ['arabic'],
   weight: ['400', '700'],
@@ -43,7 +43,7 @@ export default function RootLayout({
             <main className="flex-grow">
             <CityProvider>
               <PrayerTimingsProvider>
-              {children}
+              {children}<Analytics/>
               </PrayerTimingsProvider>
             </CityProvider>
               </main>
