@@ -72,7 +72,7 @@ export default function ContactPage() {
           event.preventDefault();
           const formData = new FormData(event.target)
 
-          formData.append("access_key", "0e3198d9-8a5c-4031-9955-f0674edfd3e3");
+          formData.append("access_key", "0b7c4649-e3bb-42bd-b17a-ee3804122cbc");
 
           const object = Object.fromEntries(formData);
           const json = JSON.stringify(object);
@@ -200,6 +200,7 @@ export default function ContactPage() {
                     <Mail className="h-5 w-5 text-primary mt-1" />
                     <div>
                       <p className="font-medium">Email</p>
+                      <p className="text-sm text-muted-foreground">mosqueofindia@gmail.com</p>
                       <p className="text-sm text-muted-foreground">mohammed.faizan@xenolve.com</p>
                       <p className="text-sm text-muted-foreground">mohammed.maaz@xenolve.com</p>
                     </div>
