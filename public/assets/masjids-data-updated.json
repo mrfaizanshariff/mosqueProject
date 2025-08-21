@@ -9073,5 +9073,49 @@
             "lat": "12.3167851",
             "lng": "76.6490431"
         }
+    },
+     {
+        "id": "Nashik_1",
+        "name": "Mehbubiya Mosque",
+        "address": "XQQV+9VQ Nashik, Maharashtra",
+        "city": "Nashik",
+        "state": "Maharashtra",
+        "zipCode": "422011",
+        "phone": "-",
+        "email": "-",
+        "website": "-",
+        "locationURL": "https://www.google.com/maps/place/19%C2%B059'18.5%22N+73%C2%B047'41.0%22E/@19.9884772,73.7921473,17z/data=!3m1!4b1!4m4!3m3!8m2!3d19.9884722!4d73.7947222?entry=ttu&g_ep=EgoyMDI1MDgxOC4wIKXMDSoASAFQAw%3D%3D",
+        "prayerTimes": {
+            "Fajr": "05:45",
+            "Zuhar": "13:30",
+            "Asr": "17:30",
+            "Maghrib": "19:04",
+            "Isha": "20:30",
+            "Jummah":"13:30"
+        },
+        "facilities": [
+            {
+                "id": "1-1",
+                "name": "Wudu Area",
+                "icon": "droplets"
+            }
+        ],
+        "images": [
+            {
+                "id": "1-1",
+                "url": "",
+                "alt": "Mehbubiya Mosque",
+                "width": 1200,
+                "height": 800
+            }
+        ],
+        "announcements": [
+           
+        ],
+        "description": "Mehbubiya Mosque Nashik",
+        "location": {
+            "lat": "19.9884726",
+            "lng": "73.7947301"
+        }
     }
 ]

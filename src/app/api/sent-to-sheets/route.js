@@ -56,6 +56,13 @@ export async function POST(request) {
     } = fields;
 
       const uploadedImageUrls = [];
+      const currentDate = new Date();
+      // Format date as 'Aug-21-2025'
+      const formattedDate = currentDate.toLocaleString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+      }).replace(',', '').replace(' ', '-').replace(' ', '-');
     for (const img of images) {
       const buffer = Buffer.from(await img.arrayBuffer());
       const uploadRes = await new Promise((resolve, reject) => {
@@ -68,6 +75,7 @@ export async function POST(request) {
       });
       uploadedImageUrls.push(uploadRes.secure_url);
     }
+    
     const values = [
       [
         city || '',
@@ -87,6 +95,7 @@ export async function POST(request) {
         facilities && Array.isArray(facilities) ? facilities.join(', ') : '',
         description || '',
         uploadedImageUrls.join(', '),  // Store image names (or URLs if uploaded elsewhere)
+        formattedDate || '',
       ],
     ];
 
