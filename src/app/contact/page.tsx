@@ -66,19 +66,33 @@ export default function ContactPage() {
     },
   })
 
-  const onSubmit = async (data: ContactFormData) => {
+  const handleSubmit = async (event:any) => {
     setIsSubmitting(true)
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    console.log('Contact form submitted:', data)
-    setIsSubmitted(true)
-    setIsSubmitting(false)
-    form.reset()
-    
-    // Reset success message after 5 seconds
-    setTimeout(() => setIsSubmitted(false), 5000)
+          event.preventDefault();
+          const formData = new FormData(event.target)
+
+          formData.append("access_key", "0e3198d9-8a5c-4031-9955-f0674edfd3e3");
+
+          const object = Object.fromEntries(formData);
+          const json = JSON.stringify(object);
+
+          const response = await fetch("https://api.web3forms.com/submit", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+              },
+              body: json
+          });
+          const result = await response.json();
+          if (result.success) {
+            setIsSubmitting(false)
+              console.log(result);
+          }else {
+            setIsSubmitting(false)
+              console.error("Error submitting form:", result.message);
+          }
   }
 
   const containerVariants = {
@@ -195,7 +209,7 @@ export default function ContactPage() {
                     <Phone className="h-5 w-5 text-primary mt-1" />
                     <div>
                       <p className="font-medium">Phone</p>
-                      <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                      <p className="text-sm text-muted-foreground">Coming Soon</p>
                       <p className="text-xs text-muted-foreground">Mon-Fri, 9AM-6PM IST</p>
                     </div>
                   </div>
@@ -254,7 +268,7 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
@@ -293,7 +307,7 @@ export default function ContactPage() {
                           <FormItem>
                             <FormLabel>Phone Number (Optional)</FormLabel>
                             <FormControl>
-                              <Input placeholder="+1 (555) 123-4567" {...field} />
+                              <Input placeholder="+91 123-4567-890" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -306,7 +320,12 @@ export default function ContactPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Subject *</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            {/* Custom Select for UI */}
+                            <Select
+                              onValueChange={(val) => field.onChange(val)}
+                              value={field.value}
+                              defaultValue={field.value}
+                            >
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Select a subject" />
@@ -323,6 +342,8 @@ export default function ContactPage() {
                                 ))}
                               </SelectContent>
                             </Select>
+                            {/* Hidden input for FormData compatibility */}
+                            <input type="hidden" name="subject" value={field.value || ''} />
                             <FormMessage />
                           </FormItem>
                         )}
