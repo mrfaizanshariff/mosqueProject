@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
-import { Clock, Heart } from 'lucide-react'
+import { Heart } from 'lucide-react'
+import Image from 'next/image'
 
 const Footer = () => {
   return (
@@ -8,8 +9,9 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <div className="flex items-center">
-              <Clock className="h-6 w-6 text-primary mr-2" />
+            <div className="flex items-end">
+                          <Image src="/android-chrome-512x512.png" alt="Mosque of India Logo" width={60} height={60}/> 
+              
               <span className="font-amiri text-2xl font-bold">Mosques of India</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
@@ -40,8 +42,9 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-lg mb-4">Contact</h3>
             <ul className="space-y-2">
-              <li className="text-sm">Email: mohammed.faizan@xenolve.com</li>
-              <li className="text-sm">Email: mohammed.maaz@xenolve.com</li>
+              <li className="text-sm">Email: <a href="mailto:mosqueofIndia@gmail.com">mosqueofIndia@gmail.com</a></li>
+              <li className="text-sm">Email: <a href="mailto:mohammed.faizan@xenolve.com">mohammed.faizan@xenolve.com</a></li>
+              <li className="text-sm">Email: <a href="mailto:mohammed.maaz@xenolve.com">mohammed.maaz@xenolve.com</a></li>
               <li className="text-sm">Address: Mysore,Karnataka</li>
             </ul>
           </div>

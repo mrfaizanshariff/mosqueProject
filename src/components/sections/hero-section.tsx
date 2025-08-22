@@ -9,6 +9,7 @@ import { Separator } from '../../../components/ui/separator'
 import Link from 'next/link'
 import { usePrayerTimings } from '../../context/PrayerTimingsContext'
 import { useCity } from '../../context/CityContext'
+import Image from 'next/image'
 
 export function convert24To12Hour(time24: string): string {
   if (!/^\d{1,2}:\d{2}$/.test(time24)) return time24; // Return as is if format is invalid
@@ -111,7 +112,8 @@ export function HeroSection() {
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               >
-                <Clock className="h-10 w-10 mx-auto text-primary mb-3" />
+              <Image src="/android-chrome-512x512.png" alt="Logo" className='m-auto' width={80} height={80}/> 
+                
               </motion.div>
               <h2 className="font-amiri text-2xl font-bold">Prayer Times - {city ? city : 'India'}</h2>
               <p className="text-muted-foreground">Current time: {currentTime}</p>

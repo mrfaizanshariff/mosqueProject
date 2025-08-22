@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from '../../../components/ui/sheet'
 import { cn } from '../../../lib/utils'
+import Image from 'next/image'
 
 const Header = () => {
   const { theme, setTheme } = useTheme()
@@ -51,8 +52,8 @@ const Header = () => {
     >
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between py-4">
-          <Link href="/" className="flex items-center space-x-2">
-            <Clock className="h-6 w-6 text-primary" />
+          <Link href="/" className="flex items-end space-x-2">
+            <Image src="/android-chrome-512x512.png" alt="Logo" width={40} height={40}/> 
             <span className="font-amiri text-xl md:text-2xl font-bold">Mosques of India</span>
           </Link>
 

@@ -22,6 +22,14 @@ const notoSans = Noto_Sans({
 export const metadata: Metadata = {
   title: 'Mosque Finder | Prayer Times Directory',
   description: 'Find prayer times for mosques in your city',
+   icons: {
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({

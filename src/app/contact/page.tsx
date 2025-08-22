@@ -200,9 +200,9 @@ export default function ContactPage() {
                     <Mail className="h-5 w-5 text-primary mt-1" />
                     <div>
                       <p className="font-medium">Email</p>
-                      <p className="text-sm text-muted-foreground">mosqueofindia@gmail.com</p>
-                      <p className="text-sm text-muted-foreground">mohammed.faizan@xenolve.com</p>
-                      <p className="text-sm text-muted-foreground">mohammed.maaz@xenolve.com</p>
+                      <p className="text-sm text-muted-foreground"><a href="mailto:mosqueofindia@gmail.com">mosqueofindia@gmail.com</a></p>
+                      <p className="text-sm text-muted-foreground"><a href="mailto:mohammed.faizan@xenolve.com">mohammed.faizan@xenolve.com</a></p>
+                      <p className="text-sm text-muted-foreground"><a href="mailto:mohammed.maaz@xenolve.com">mohammed.maaz@xenolve.com</a></p>
                     </div>
                   </div>
                   
