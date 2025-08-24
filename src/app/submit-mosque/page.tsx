@@ -94,6 +94,7 @@ type FormData = z.infer<typeof formSchema>
 // Memoized facilities data
 const availableFacilities = [
   { id: 'wudu', name: 'Wudu Area' },
+  { id: 'washroom', name: 'Washroom' },
   { id: 'women-prayer', name: "Women's Prayer Space" },
   { id: 'library', name: 'Library' },
   { id: 'c-school', name: 'Children Deen School' },

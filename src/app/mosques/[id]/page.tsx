@@ -43,6 +43,14 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   }
 }
 
+export function convert24To12Hour(time24: string): string {
+  if (!/^\d{1,2}:\d{2}$/.test(time24)) return time24; // Return as is if format is invalid
+  let [hour, minute] = time24.split(":").map(Number);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+  return `${hour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+}
 
 export async function generateStaticParams() {
   const mosquesData = mosques
@@ -150,7 +158,7 @@ export default function MosqueDetailPage({ params }: { params: { id: string } })
                     <PrayerTimeCard
                       key={prayer}
                       prayer={prayer}
-                      time={mosque.prayerTimes[prayer]}
+                      time={convert24To12Hour(mosque.prayerTimes[prayer])}
                       />
                      
                      
