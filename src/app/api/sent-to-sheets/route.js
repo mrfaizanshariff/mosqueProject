@@ -3,13 +3,37 @@ export const dynamic = 'force-dynamic';
 
 import { google } from 'googleapis';
 
-import { v2 as cloudinary } from 'cloudinary';
-// Cloudinary config (using env vars)
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+
+// Reusable S3 client (one per module)
+const s3 = new S3Client({
+  region: process.env.AWS_REGION, // e.g. 'ap-south-1'
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+  },
 });
+
+
+function objectPublicUrl(key) {
+  const bucket = process.env.S3_BUCKET_NAME;
+  const region = process.env.AWS_REGION;
+  // Virtual-hosted-style URL
+  return `https://${bucket}.s3.${region}.amazonaws.com/${encodeURIComponent(key)}`; 
+}
+
+function guessExt(file) {
+  const name = typeof file.name === 'string' ? file.name : '';
+  const dotIdx = name.lastIndexOf('.');
+  if (dotIdx !== -1) return name.slice(dotIdx).toLowerCase();
+  // fallback to MIME type
+  const type = file.type || '';
+  if (type === 'image/jpeg' || type === 'image/jpg') return '.jpg';
+  if (type === 'image/png') return '.png';
+  if (type === 'image/webp') return '.webp';
+  if (type === 'image/gif') return '.gif';
+  return '';
+}
 
 export async function POST(request) {
   try {
@@ -63,18 +87,40 @@ export async function POST(request) {
         day: '2-digit',
         year: 'numeric',
       }).replace(',', '').replace(' ', '-').replace(' ', '-');
-    for (const img of images) {
-      const buffer = Buffer.from(await img.arrayBuffer());
-      const uploadRes = await new Promise((resolve, reject) => {
-        cloudinary.uploader
-          .upload_stream({ folder: 'mosques' }, (err, result) => {
-            if (err) return reject(err);
-            resolve(result);
-          })
-          .end(buffer);
-      });
-      uploadedImageUrls.push(uploadRes.secure_url);
-    }
+  
+      // Ensure S3 envs exist
+if (!process.env.S3_BUCKET_NAME || !process.env.AWS_REGION) {
+  throw new Error('S3_BUCKET_NAME or AWS_REGION is not configured');
+}
+const basePrefix = 'mosques'; // keep a folder-like prefix in S3
+
+for (const img of images) {
+  // Convert web File to Node Buffer
+  const buffer = Buffer.from(await img.arrayBuffer());
+
+  // Build a safe, structured key: mosques/{city}/{mosque}/{timestamp-rand}.{ext}
+  const ext = guessExt(img);
+  const safeCity = (city || 'unknown-city').toString().replace(/[^\w\-]+/g, '-');
+  const safeMosque = (mosqueName || otherMosqueName || 'unknown-mosque')
+    .toString()
+    .replace(/[^\w\-]+/g, '-');
+  const unique = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const key = `${basePrefix}/${safeCity}/${safeMosque}/${unique}${ext}`;
+
+  // Put the object to S3 with correct ContentType
+  const put = new PutObjectCommand({
+    Bucket: process.env.S3_BUCKET_NAME,
+    Key: key,
+    Body: buffer,
+    ContentType: img.type || 'application/octet-stream',
+  });
+
+  await s3.send(put);
+
+  // If public: store a browsable URL; if private: store the key instead
+  const urlOrKey = process.env.PUBLIC_S3 ? objectPublicUrl(key) : key;
+  uploadedImageUrls.push(urlOrKey);
+}
     
     const values = [
       [
