@@ -8986,21 +8986,21 @@
     },
      {
         "id": "121",
-        "name": "Rifah Masjid",
-        "address": "8J8X+PJ7, Sayyaji Rao Rd, Medar Block, Yadavagiri, Mysuru, Karnataka 570001",
-        "city": "Bengaluru",
+        "name": "Masjid Taj Ul Falah",
+        "address": "8MGP+Q62, Subhani Rd, Shantinagara North, Udayagiri, Mysuru, Karnataka 570019",
+        "city": "Mysuru",
         "state": "Karnataka",
-        "zipCode": "570001",
+        "zipCode": "570019",
         "phone": " ",
         "email": " ",
         "website": " ",
-        "locationURL": "https://www.google.co.in/maps/place/Rifah+Masjid/data=!4m7!3m6!1s0x3baf7073b124f623:0x2e471af8cd2515c9!8m2!3d12.3167851!4d76.6490431!16s%2Fg%2F11h0kc4js!19sChIJI_YksXNwrzsRyRUlzfgaRy4?authuser=0&hl=en&rclk=1",
+        "locationURL": "https://www.google.com/maps/place/AL+FALAH+madrasa+Mysore/@12.3267649,76.6853926,20.79z/data=!4m12!1m5!3m4!2zMTLCsDE5JzM2LjkiTiA3NsKwNDEnMDguMSJF!8m2!3d12.3269097!4d76.6855789!3m5!1s0x3baf7141fe7a87f5:0xc044f1653f7a31f5!8m2!3d12.3268829!4d76.6855305!16s%2Fg%2F11rxv1khvk?entry=ttu&g_ep=EgoyMDI1MDgyNS4wIKXMDSoASAFQAw%3D%3D",
         "prayerTimes": {
-            "Fajr": "05:30",
-            "Zuhar": "13:15",
-            "Asr": "16:45",
-            "Maghrib": "19:30",
-            "Isha": "21:00",
+            "Fajr": "05:40",
+            "Zuhar": "13:140",
+            "Asr": "17:15",
+            "Maghrib": "18:44",
+            "Isha": "20:30",
 "Jummah":"13:30"
         },
         "facilities": [
@@ -9008,16 +9008,6 @@
                 "id": "120-1",
                 "name": "Wudu Area",
                 "icon": "droplets"
-            },
-            {
-                "id": "120-2",
-                "name": "Women's Prayer Space",
-                "icon": "users"
-            },
-            {
-                "id": "120-3",
-                "name": "Library",
-                "icon": "book-open"
             },
             {
                 "id": "120-4",
@@ -9028,35 +9018,73 @@
                 "id": "120-5",
                 "name": "Parking",
                 "icon": "parking"
-            },
+            }
+        ],
+        "images": [
+           
+        ],
+        "announcements": [
             {
-                "id": "120-6",
-                "name": "Wheelchair Access",
-                "icon": "wheelchair"
+                "id": "1-1",
+                "title": "updated timings",
+                "content": "Last update on 29th Aug 2025",
+                "date": "2025-08-29  ",
+                "isImportant": false
+            }
+        ],
+        "description": "Masjid in Shanti Nagar Mysuru",
+        "location": {
+            "lat": "12.3269096638155",
+            "lng": "76.6855789264843"
+        }
+    },
+     {
+        "id": "Bengaluru_1_Makkah_masjid",
+        "name": "Makkah Masjid",
+        "address": "VHXR+GCR Bengaluru, Karnataka",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "zipCode": "",
+        "phone": "-",
+        "email": "-",
+        "website": "-",
+        "locationURL": "https://www.google.com/maps/place/12%C2%B053'55.9%22N+77%C2%B035'27.6%22E/@12.8989148,77.5909675,3a,75y,22.88h,116.5t/data=!3m7!1e1!3m5!1sGH7K7SQpHAIcQe785aDtvg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-26.496617894682686%26panoid%3DGH7K7SQpHAIcQe785aDtvg%26yaw%3D22.876324188446592!7i13312!8i6656!4m4!3m3!8m2!3d12.8988681!4d77.5910084?entry=ttu&g_ep=EgoyMDI1MDgyNS4wIKXMDSoASAFQAw%3D%3D",
+        "prayerTimes": {
+            "Fajr": "05:35",
+            "Zuhar": "13:15",
+            "Asr": "17:05",
+            "Maghrib": "18:39",
+            "Isha": "20:30",
+            "Jummah":"13:20"
+        },
+        "facilities": [
+            {
+                "id": "1-1",
+                "name": "Wudu Area",
+                "icon": "droplets"
+            },
+             {
+                "id": "1-5",
+                "name": "Parking",
+                "icon": "parking"
             }
         ],
         "images": [
             {
-                "id": "120-1",
-                "url": "https://images.unsplash.com/photo-1684453728323-a8c2e5b615eb?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                "alt": "Masjid Al-Noor exterior view",
+                "id": "1-1",
+                "url": "",
+                "alt": "Makkah Mosque",
                 "width": 1200,
                 "height": 800
             }
         ],
         "announcements": [
-            {
-                "id": "1-1",
-                "title": "  ",
-                "content": "  ",
-                "date": "  ",
-                "isImportant": true
-            }
+           
         ],
-        "description": "Masjid Al-Noor is one of the oldest and largest Islamic centers in the city, serving the Muslim community since 1975. The mosque offers a wide range of services including daily prayers, educational programs, and community events.",
+        "description": "Makkah Masjid Bengaluru",
         "location": {
-            "lat": "12.3167851",
-            "lng": "76.6490431"
+            "lat": "12.8988681",
+            "lng": "777.5910084"
         }
     },
      {
