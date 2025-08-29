@@ -94,8 +94,8 @@ export default function MosqueDetailPage({ params }: { params: { id: string } })
           <div className="lg:col-span-2">
             <div className="relative h-[300px] md:h-[400px] w-full rounded-xl overflow-hidden mb-6">
               <Image
-                src={mosque.images[0].url}
-                alt={mosque.images[0].alt}
+                src={mosque.images[0]?.url}
+                alt={mosque.images[0]?.alt}
                 fill
                 className="object-cover"
                 priority
