@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRamadanStore } from '../../store/ramadanStore';
-import { Check, Plus, X } from 'lucide-react';
+import { Check, Plus, X, ArrowLeft } from 'lucide-react';
 import { Goal } from '../../types/ramadan';
 
 export default function GoalSelector() {
@@ -54,7 +54,14 @@ export default function GoalSelector() {
     <div className="min-h-screen bg-background p-4 py-8">
       <div className="max-w-2xl mx-auto space-y-8">
         {/* Header */}
-        <div className="text-center space-y-2">
+        <div className='flex cursor-pointer' onClick={()=>router.back()}>
+            <ArrowLeft></ArrowLeft>
+            <span>
+                Back
+                
+                </span> 
+        </div>
+         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-foreground">
             Choose Your Focus
           </h1>

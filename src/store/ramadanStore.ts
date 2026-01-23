@@ -7,7 +7,8 @@ import {
   DailyProgress, 
   Goal, 
   QuranPlan,
-  SalahProgress 
+  SalahProgress, 
+  DhikrGoal
 } from '../types/ramadan';
 import { 
   getTodayDate, 
@@ -185,7 +186,7 @@ export const useRamadanStore = create<RamadanStore>()(
         const newCount = currentDhikr.count + count;
         
         // Check if goal is met
-        const dhikrGoal = state.goals.find(g => g.type === 'dhikr');
+        const dhikrGoal = state.goals.find(g => g.type === {} as DhikrGoal);
         const dailyTarget = dhikrGoal?.dailyTarget || 100;
         
         return {

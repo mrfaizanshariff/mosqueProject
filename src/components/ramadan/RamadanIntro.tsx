@@ -2,14 +2,13 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Moon, Heart, BookOpen } from 'lucide-react';
 
 export default function RamadanIntro() {
   const router = useRouter();
   const [showHowItWorks, setShowHowItWorks] = useState(false);
-
   const handleStart = () => {
     router.push('/ramadan/setup');
   };
@@ -20,7 +19,7 @@ export default function RamadanIntro() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/10 to-background flex items-center justify-center p-4">
+    <div className="min-h-screen pattern-bg bg-gradient-to-b from-primary/10 to-background flex items-center justify-center p-4">
       <div className="max-w-2xl w-full space-y-8 text-center">
         {/* Logo/Icon */}
         <div className="flex justify-center">
@@ -95,7 +94,7 @@ export default function RamadanIntro() {
         {/* How it Works Link */}
         <button
           onClick={() => setShowHowItWorks(true)}
-          className="text-primary hover:underline text-sm"
+          className="text-primary hover:underline text-md"
         >
           How it works
         </button>

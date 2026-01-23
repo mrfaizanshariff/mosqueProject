@@ -10,8 +10,15 @@ import { QuranQuoteSwitcher } from '../components/features/quran-verse'
 import { PrayerTimingsProvider } from '../context/PrayerTimingsContext'
 import { CityProvider } from '../context/CityContext'
 import CitySelection from '../components/features/city-selection'
-
+import { Language,QuranClient } from "@quranjs/api";
 export default function Home() {
+  const client = new QuranClient({
+  clientId: process.env.QURAN_CLIENT_ID!,
+  clientSecret: process.env.QURAN_CLIENT_SECRET!,
+  defaults: {
+    language: Language.ENGLISH,
+  },
+});
   // Only show 3 mosques on the homepage
   const featuredMosques = mosques.slice(0, 3)
 

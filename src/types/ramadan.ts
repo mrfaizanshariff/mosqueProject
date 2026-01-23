@@ -1,6 +1,12 @@
 // types/ramadan.ts
 
-export type GoalType = 'salah' | 'quran' | 'dhikr' | 'taraweeh' | 'custom';
+export type GoalType = 'salah' | 'quran' | DhikrGoal | 'taraweeh' | 'custom';
+
+export interface DhikrGoal  {
+    id: string;
+    dhikrName: string;
+    dailyTarget: number;
+}
 
 export type Goal = {
   id: string;

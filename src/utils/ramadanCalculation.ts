@@ -1,6 +1,6 @@
 // utils/ramadanCalculations.ts
 
-import { QuranPlan, DailyProgress } from '../types/ramadan';
+import { QuranPlan, DailyProgress, DhikrGoal } from '../types/ramadan';
 
 /**
  * Calculate daily Quran reading target
@@ -168,7 +168,7 @@ export function getDefaultGoals() {
     },
     {
       id: 'dhikr',
-      type: 'dhikr' as const,
+      type: {id:'allahuAkbar',dailyTarget:33,dhikrName:"Allahu Akbar"} as DhikrGoal,
       name: 'Daily Dhikr',
       dailyTarget: 100,
       enabled: true

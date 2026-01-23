@@ -12,7 +12,7 @@
     "@aws-sdk/client-s3": "^3.873.0",
     "@hookform/resolvers": "^5.1.1",
     "@next/swc-wasm-nodejs": "13.5.1",
-    "@quranjs/api": "^1.8.0",
+    "@quranjs/api": "2.0.1",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
