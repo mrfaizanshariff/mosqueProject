@@ -264,8 +264,8 @@ export class AudioService {
       const currentConfig = client.getConfig();
     //   client.updateConfig({ defaults: { language: undefined } });
     //   const audio = client.audio.findAllChapterRecitations(reciterId);;
-    const audio = await client.fetcher.fetch(`/content/api/v4/chapter_recitations/${reciterId}/${chapterId}`, options);
-    //   const audio = await client.audio.findChapterRecitationById(reciterId,chapterId,options);
+    // const audio = await client.fetcher.fetch(`/content/api/v4/chapter_recitations/${reciterId}/${chapterId}`, options);
+      const audio = await client.audio.findChapterRecitationById(reciterId,chapterId,options);
         
       // Restore original config
     //   client.updateConfig(currentConfig);

@@ -23,7 +23,7 @@ export default function QuranReaderPage() {
   const {
     chapter,
     verses,
-    // audio,
+    audio,
     loading,
     error,
   } = useQuranReader(surahNumber, {
@@ -31,7 +31,7 @@ export default function QuranReaderPage() {
     translations: [TRANSLATION_IDS.SAHIH_INTERNATIONAL],
     text_script: 'textIndopak',
   });
-  const {data:audio}= useChapterAudio(surahNumber, RECITER_IDS.MISHARI_AL_AFASY,{segments:true});
+//   const {data:audio}= useChapterAudio(surahNumber, RECITER_IDS.MISHARI_AL_AFASY,{segments:true});
 
    const { updateProgress, markSurahCompleted, getProgress } = useQuranProgressStore();
 
@@ -130,9 +130,9 @@ const containerRef = useRef<HTMLDivElement>(null);
 
 //   Track current verse and word based on audio time
    useEffect(() => {
-    if (!audio?.audioFile?.timestamps) return;
+    if (!audio?.timestamps) return;
 
-    const currentVerse = audio?.audioFile.timestamps.find(
+    const currentVerse = audio?.timestamps.find(
       (timing: any) =>
         currentTime >= timing.timestampFrom &&
         currentTime <= timing.timestampTo
@@ -364,7 +364,7 @@ if (foundWordPosition !== currentWordPosition) {
       {audio && (
         <div className="sticky bottom-0 left-0 z-10 bg-card border-b border-border shadow-lg">
           <div className="max-w-4xl mx-auto p-4">
-            <audio ref={audioRef} src={audio.audioFile.audioUrl} preload="metadata" />
+            <audio ref={audioRef} src={audio.audioUrl} preload="metadata" />
 
             {/* Progress Bar */}
             <div
