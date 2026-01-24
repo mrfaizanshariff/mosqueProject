@@ -269,7 +269,7 @@ export class AudioService {
         
       // Restore original config
     //   client.updateConfig(currentConfig);
-      return audio;
+      return audio as any;
 
     //  const url = `${QURAN_API_BASE}/chapter_recitations/${reciterId}/${chapterId}?${options.segments ? 'segments=true' : ''}`;
     
