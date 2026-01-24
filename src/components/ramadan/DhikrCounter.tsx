@@ -18,7 +18,7 @@ export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
   const todayProgress = dailyProgress[today] || { date: today, habits: {} };
   const dhikrCount = todayProgress.habits.dhikr?.count || 0;
   
-  const dhikrGoal = goals.find(g => g.type === 'dhikr' && g.enabled);
+  const dhikrGoal = goals.find(g => (g.type as string) === 'dhikr' && g.enabled);
   const dailyTarget = dhikrGoal?.dailyTarget || 100;
   const isComplete = dhikrCount >= dailyTarget;
   const progress = Math.min((dhikrCount / dailyTarget) * 100, 100);

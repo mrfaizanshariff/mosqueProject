@@ -8,11 +8,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
-import { Play, Pause, SkipBack, SkipForward } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Check } from 'lucide-react';
 import { useQuranReader, RECITER_IDS, useChapterAudio } from '../../app/hooks/useQuran';
 import { TRANSLATION_IDS } from '../../lib/quran/services';
 import { ChapterId } from '@quranjs/api';
 import QuranDebugPanel from '../QuranDebuPanels';
+import { useQuranProgressStore } from '../../store/quranProgressStore';
 
 export default function QuranReaderPage() {
   const params = useParams();
@@ -32,6 +33,8 @@ export default function QuranReaderPage() {
   });
   const {data:audio}= useChapterAudio(surahNumber, RECITER_IDS.MISHARI_AL_AFASY,{segments:true});
 
+   const { updateProgress, markSurahCompleted, getProgress } = useQuranProgressStore();
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -39,8 +42,68 @@ export default function QuranReaderPage() {
   const [currentWordIndex, setCurrentWordIndex] = useState<number | null>(null);
   const [currentVerseData, setCurrentVerseData] = useState<any>(null);
 const [currentWordPosition, setCurrentWordPosition] = useState<number | null>(null);
+const [showMarkComplete, setShowMarkComplete] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const verseRefs = useRef<Record<string, HTMLDivElement | null>>({});
+const containerRef = useRef<HTMLDivElement>(null);
+
+ const progress = getProgress(parseInt(String(surahNumber)));
+  const totalVerses = chapter?.versesCount || 0;
+
+   // Restore scroll position
+  useEffect(() => {
+    if (progress?.scrollPosition && containerRef.current) {
+      setTimeout(() => {
+        window.scrollTo(0, progress.scrollPosition || 0);
+      }, 100);
+    }
+  }, [progress]);
+
+  // Track scroll and update progress
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      
+      // Find which verse is currently in view
+      const viewportMiddle = window.innerHeight / 2;
+      let currentVerseNumber = 1;
+
+      Object.entries(verseRefs.current).forEach(([key, ref]) => {
+        if (ref) {
+          const rect = ref.getBoundingClientRect();
+          if (rect.top < viewportMiddle && rect.bottom > viewportMiddle) {
+            currentVerseNumber = parseInt(key.split(':')[1]);
+          }
+        }
+      });
+
+      // Update progress
+      if (currentVerseNumber > 0) {
+        updateProgress(
+          parseInt(String(surahNumber)),
+          currentVerseNumber,
+          totalVerses,
+          scrollPosition
+        );
+      }
+
+      // Show mark complete button near bottom
+      const scrollPercentage =
+        (scrollPosition / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      setShowMarkComplete(scrollPercentage > 80);
+    };
+
+    const debounce = setTimeout(() => {
+      handleScroll();
+    }, 500);
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      clearTimeout(debounce);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [surahNumber, totalVerses, updateProgress]);
+
 
   // Audio event handlers
   useEffect(() => {
@@ -168,6 +231,11 @@ if (foundWordPosition !== currentWordPosition) {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+  
+    const handleMarkComplete = () => {
+    markSurahCompleted(parseInt(String(surahNumber)), totalVerses);
+    setShowMarkComplete(false);
   };
 
   // Loading state
@@ -310,6 +378,18 @@ if (foundWordPosition !== currentWordPosition) {
                 }}
               />
             </div>
+              {/* Mark Complete Button */}
+      {showMarkComplete && progress?.status !== 'completed' && (
+        <div className="fixed bottom-8 right-8 z-20">
+          <button
+            onClick={handleMarkComplete}
+            className="px-6 py-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:opacity-90 transition flex items-center gap-2"
+          >
+            <Check className="w-5 h-5" />
+            Mark as Complete
+          </button>
+        </div>
+      )}
 
             {/* Controls */}
             <div className="flex items-center justify-between">
