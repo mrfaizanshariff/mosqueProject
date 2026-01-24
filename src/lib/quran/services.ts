@@ -133,7 +133,7 @@ export class VerseService {
       const client = getQuranClient();
       return await client.verses.findByChapter(chapterId, {
         page: options?.page || 1,
-        perPage: options?.perPage || 50,
+        perPage: options?.perPage || 500,
         translations: options?.translations || [131], // Default: Sahih International
         words: options?.words ?? true,
         wordFields: options?.wordFields || {
@@ -262,13 +262,13 @@ export class AudioService {
       const client = getQuranClient();
        // Save current config
       const currentConfig = client.getConfig();
-      client.updateConfig({ defaults: { language: undefined } });
+    //   client.updateConfig({ defaults: { language: undefined } });
     //   const audio = client.audio.findAllChapterRecitations(reciterId);;
     const audio = await client.fetcher.fetch(`/content/api/v4/chapter_recitations/${reciterId}/${chapterId}`, options);
     //   const audio = await client.audio.findChapterRecitationById(reciterId,chapterId,options);
         
       // Restore original config
-      client.updateConfig(currentConfig);
+    //   client.updateConfig(currentConfig);
       return audio;
 
     //  const url = `${QURAN_API_BASE}/chapter_recitations/${reciterId}/${chapterId}?${options.segments ? 'segments=true' : ''}`;

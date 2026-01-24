@@ -22,8 +22,8 @@ export function getQuranClient(): QuranClient {
   }
 
   // Validate environment variables
-  const clientId = process.env.QURAN_CLIENT_ID || "6ce99855-56fd-4016-a6ce-ab01cf15a83b";
-  const clientSecret = process.env.QURAN_CLIENT_SECRET || "UbFA.TdPNhAZLPI14~IyUHT_jk";
+  const clientId = process.env.NEXT_PUBLIC_QURAN_CLIENT_ID || "6ce99855-56fd-4016-a6ce-ab01cf15a83b";
+  const clientSecret = process.env.NEXT_PUBLIC_QURAN_CLIENT_SECRET || "UbFA.TdPNhAZLPI14~IyUHT_jk";
 
   if (!clientId || !clientSecret) {
     throw new Error(
