@@ -7,16 +7,13 @@
  * - Automatic loading/error states
  * - Caching and revalidation
  * - Type-safe
+ * 
+ * Uses QuranApi (client-side) which calls Next.js API routes
+ * The API routes then use the @quranjs/api library server-side
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import {
-  ChapterService,
-  VerseService,
-  AudioService,
-  SearchService,
-} from '../../lib/quran/services';
-import { Chapter, ChapterId, JuzNumber, Language, PageNumber, VerseKey } from '@quranjs/api';
+import { QuranApi } from '@/lib/quran/api';
 
 // ============================================================================
 // GENERIC ASYNC HOOK
@@ -65,20 +62,20 @@ function useAsync<T>(
  * Fetch all chapters
  * Usage: const { data: chapters, loading, error } = useChapters();
  */
-export function useChapters(options?: { language?: Language }) {
+export function useChapters(options?: { language?: string }) {
   return useAsync(
-    () => ChapterService.getAll(options),
+    () => QuranApi.chapters.getAll(options),
     [options?.language]
   );
 }
 
 /**
  * Fetch single chapter by ID
- * Usage: const { data: chapter, loading } = useChapter('36');
+ * Usage: const { data: chapter, loading } = useChapter(36);
  */
-export function useChapter(id: ChapterId, options?: { language?: Language }) {
+export function useChapter(id: number, options?: { language?: string }) {
   return useAsync(
-    () => ChapterService.getById(id, options),
+    () => QuranApi.chapters.getById(id, options),
     [id, options?.language]
   );
 }
@@ -86,9 +83,9 @@ export function useChapter(id: ChapterId, options?: { language?: Language }) {
 /**
  * Fetch chapter info/description
  */
-export function useChapterInfo(id: ChapterId, options?: { language?: Language }) {
+export function useChapterInfo(id: number, options?: { language?: string }) {
   return useAsync(
-    () => ChapterService.getInfo(id, options),
+    () => QuranApi.chapters.getInfo(id, options),
     [id, options?.language]
   );
 }
@@ -100,24 +97,23 @@ export function useChapterInfo(id: ChapterId, options?: { language?: Language })
 /**
  * Fetch verses by chapter with pagination
  * Usage:
- * const { data, loading, error, refetch } = useVersesByChapter('36', {
+ * const { data, loading, error, refetch } = useVersesByChapter(36, {
  *   page: 1,
  *   perPage: 20,
  *   translations: [131, 20]
  * });
  */
 export function useVersesByChapter(
-  chapterId: ChapterId,
+  chapterId: number,
   options?: {
     page?: number;
     perPage?: number;
     translations?: number[];
     words?: boolean;
-    textIndopak?: boolean;
   }
 ) {
   return useAsync(
-    () => VerseService.getByChapter(chapterId, options),
+    () => QuranApi.verses.getByChapter(chapterId, options),
     [chapterId, options?.page, options?.perPage, JSON.stringify(options?.translations)]
   );
 }
@@ -127,14 +123,14 @@ export function useVersesByChapter(
  * Usage: const { data: verse } = useVerse('2:255');
  */
 export function useVerse(
-  verseKey: VerseKey,
+  verseKey: string,
   options?: {
     translations?: number[];
     words?: boolean;
   }
 ) {
   return useAsync(
-    () => VerseService.getByKey(verseKey, options),
+    () => QuranApi.verses.getByKey(verseKey, options),
     [verseKey, JSON.stringify(options?.translations), options?.words]
   );
 }
@@ -143,7 +139,7 @@ export function useVerse(
  * Fetch verses by Juz
  */
 export function useVersesByJuz(
-  juzNumber: JuzNumber,
+  juzNumber: number,
   options?: {
     page?: number;
     perPage?: number;
@@ -151,7 +147,7 @@ export function useVersesByJuz(
   }
 ) {
   return useAsync(
-    () => VerseService.getByJuz(juzNumber, options),
+    () => QuranApi.verses.getByJuz(juzNumber, options),
     [juzNumber, options?.page, options?.perPage]
   );
 }
@@ -160,14 +156,14 @@ export function useVersesByJuz(
  * Fetch verses by page number
  */
 export function useVersesByPage(
-  pageNumber: PageNumber,
+  pageNumber: number,
   options?: {
     translations?: number[];
     words?: boolean;
   }
 ) {
   return useAsync(
-    () => VerseService.getByPage(pageNumber, options),
+    () => QuranApi.verses.getByPage(pageNumber, options),
     [pageNumber, JSON.stringify(options?.translations)]
   );
 }
@@ -175,9 +171,9 @@ export function useVersesByPage(
 /**
  * Fetch random verse (for daily verse feature)
  */
-export function useRandomVerse(options?: { translations?: number[] }) {
+export function useRandomVerse(options?: any) {
   return useAsync(
-    () => VerseService.getRandom(options),
+    () => QuranApi.verses.getRandom(options),
     [] // No dependencies = fetch once on mount
   );
 }
@@ -189,12 +185,19 @@ export function useRandomVerse(options?: { translations?: number[] }) {
 /**
  * Fetch chapter audio recitation
  * Usage:
- * const { data: audio, loading } = useChapterAudio('36', '7');
+ * const { data: audio, loading } = useChapterAudio(36, '7');
  */
-export function useChapterAudio(chapterId: ChapterId, reciterId: string = '7',options={segments:true}) {
+export function useChapterAudio(
+  chapterId: number,
+  reciterId: string = '7',
+  options?: { segments?: boolean }
+) {
   return useAsync(
-    () => AudioService.getChapterRecitation(chapterId, reciterId,options),
-    [chapterId, reciterId]
+    () => QuranApi.audio.getChapterRecitation(chapterId, {
+      reciterId,
+      segments: options?.segments ?? true,
+    }),
+    [chapterId, reciterId, options?.segments]
   );
 }
 
@@ -203,7 +206,7 @@ export function useChapterAudio(chapterId: ChapterId, reciterId: string = '7',op
  */
 export function useAllChapterRecitations(reciterId: string = '7') {
   return useAsync(
-    () => AudioService.getAllChapterRecitations(reciterId),
+    () => QuranApi.audio.getAllRecitations(reciterId),
     [reciterId]
   );
 }
@@ -213,11 +216,11 @@ export function useAllChapterRecitations(reciterId: string = '7') {
  * Critical for word-by-word highlighting feature
  */
 export function useVerseAudioByChapter(
-  chapterId: ChapterId,
+  chapterId: number,
   reciterId: string = '7'
 ) {
   return useAsync(
-    () => AudioService.getVerseRecitationsByChapter(chapterId, reciterId),
+    () => QuranApi.audio.getVerseRecitationsByChapter(chapterId, reciterId),
     [chapterId, reciterId]
   );
 }
@@ -225,9 +228,9 @@ export function useVerseAudioByChapter(
 /**
  * Fetch audio for specific verse
  */
-export function useVerseAudio(verseKey: VerseKey, reciterId: string = '7') {
+export function useVerseAudio(verseKey: string, reciterId: string = '7') {
   return useAsync(
-    () => AudioService.getVerseRecitationByKey(verseKey, reciterId),
+    () => QuranApi.audio.getVerseRecitationByKey(verseKey, reciterId),
     [verseKey, reciterId]
   );
 }
@@ -245,7 +248,7 @@ export function useVerseAudio(verseKey: VerseKey, reciterId: string = '7') {
  * <button onClick={() => search('light')}>Search</button>
  */
 export function useQuranSearch(options?: {
-  language?: Language;
+  language?: string;
   size?: number;
 }) {
   const [data, setData] = useState<any>(null);
@@ -262,7 +265,7 @@ export function useQuranSearch(options?: {
       try {
         setLoading(true);
         setError(null);
-        const results = await SearchService.search(query, options);
+        const results = await QuranApi.search.search(query, options);
         setData(results);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Search failed'));
@@ -283,6 +286,7 @@ export function useQuranSearch(options?: {
 /**
  * All-in-one hook for Quran reader page
  * Fetches chapter data, verses, and audio in one hook
+ * Uses QuranApi to make server-side API calls
  * 
  * Usage:
  * const {
@@ -291,35 +295,33 @@ export function useQuranSearch(options?: {
  *   audio,
  *   loading,
  *   error
- * } = useQuranReader('36', { reciterId: '7', translations: [131] });
+ * } = useQuranReader(36, { reciterId: '7', translations: [131] });
  */
 export function useQuranReader(
-  chapterId: ChapterId,
+  chapterId: number,
   options?: {
     reciterId?: string;
     translations?: number[];
     page?: number;
     perPage?: number;
-    text_script?: 'textUthmani' | 'textIndopak' | 'textImlaei' | 'textIndopakNastaleeq';
   }
 ) {
   const chapter = useChapter(chapterId);
   const verses = useVersesByChapter(chapterId, {
-    textIndopak: true,
-    // page: options?.page,
-    // perPage: options?.perPage,
-    // translations: options?.translations,
+    page: options?.page,
+    perPage: options?.perPage,
+    translations: options?.translations,
     words: true,
   });
-  const audio = useChapterAudio(chapterId, options?.reciterId || '7');
+  const audio = useChapterAudio(chapterId, options?.reciterId || '7', { segments: true });
 
   const loading = chapter.loading || verses.loading || audio.loading;
   const error = chapter.error || verses.error || audio.error;
 
   return {
-    chapter: chapter.data,
-    verses: verses.data,
-    audio: audio.data,
+    chapter: chapter.data as any,
+    verses: verses.data as any,
+    audio: audio.data as any,
     loading,
     error,
     refetch: async () => {
@@ -343,4 +345,23 @@ export const RECITER_IDS = {
   SAAD_AL_GHAMDI: '3',
   ABDUL_RAHMAN_AL_SUDAIS: '1',
   // Add more reciters as needed
+} as const;
+
+// ============================================================================
+// TRANSLATION IDs REFERENCE
+// ============================================================================
+
+export const TRANSLATION_IDS = {
+  // English
+  SAHIH_INTERNATIONAL: 131,
+  CLEAR_QURAN: 20,
+  MUSTAFA_KHATTAB: 95,
+
+  // Urdu
+  ABUL_ALA_MAUDUDI: 97,
+
+  // Arabic
+  TAFSIR_JALALAYN: 74,
+
+  // Add more as needed
 } as const;

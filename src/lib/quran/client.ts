@@ -21,13 +21,13 @@ export function getQuranClient(): QuranClient {
     return quranClientInstance;
   }
 
-  // Validate environment variables
-  const clientId = process.env.NEXT_PUBLIC_QURAN_CLIENT_ID || "6ce99855-56fd-4016-a6ce-ab01cf15a83b";
-  const clientSecret = process.env.NEXT_PUBLIC_QURAN_CLIENT_SECRET || "UbFA.TdPNhAZLPI14~IyUHT_jk";
+  // Validate environment variables (server-side only - no NEXT_PUBLIC_ prefix)
+  const clientId = process.env.QURAN_CLIENT_ID || "6ce99855-56fd-4016-a6ce-ab01cf15a83b";
+  const clientSecret = process.env.QURAN_CLIENT_SECRET || "UbFA.TdPNhAZLPI14~IyUHT_jk";
 
   if (!clientId || !clientSecret) {
     throw new Error(
-      'Missing Quran API credentials. Please set NEXT_PUBLIC_QURAN_CLIENT_ID and NEXT_PUBLIC_QURAN_CLIENT_SECRET in your .env file'
+      'Missing Quran API credentials. Please set QURAN_CLIENT_ID and QURAN_CLIENT_SECRET in your .env file'
     );
   }
 

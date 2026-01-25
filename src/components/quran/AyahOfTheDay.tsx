@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useVerse} from '../../app/hooks/useQuran';
+import { useVerse, useRandomVerse } from '../../app/hooks/useQuran';
 import { TRANSLATION_IDS } from '../../lib/quran/services';
 import { Sparkles } from 'lucide-react';
 import { VerseKey } from '@quranjs/api';
@@ -25,9 +25,9 @@ function getDailyVerseKey(): VerseKey {
   const today = new Date();
   const dayOfYear = Math.floor(
     (today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) /
-      (1000 * 60 * 60 * 24)
+    (1000 * 60 * 60 * 24)
   );
-  
+
   const index = dayOfYear % FEATURED_VERSES.length;
   return FEATURED_VERSES[index] as VerseKey;
 }
@@ -35,9 +35,8 @@ function getDailyVerseKey(): VerseKey {
 export default function AyahOfTheDay() {
   const [verseKey] = useState<VerseKey>(getDailyVerseKey());
 
-  const { data: verse, loading } = useVerse(verseKey, {
+  const { data: verse, loading } = useRandomVerse({
     translations: [TRANSLATION_IDS.SAHIH_INTERNATIONAL],
-    words: true,
   });
 
   if (loading || !verse) {
@@ -52,14 +51,14 @@ export default function AyahOfTheDay() {
 
   // Filter only actual words
   const actualWords = verse.words?.filter(
-    (w: any) => w.char_type_name === 'word'
+    (w: any) => w.charTypeName === 'word'
   ) || [];
 
   return (
     <div className="bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border border-primary/20 rounded-lg p-8 relative overflow-hidden">
       {/* Decorative element */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-      
+
       <div className="relative">
         {/* Header */}
         <div className="flex items-center gap-2 mb-6">
@@ -92,7 +91,7 @@ export default function AyahOfTheDay() {
         {verse.translations?.[0] && (
           <div className="mb-6">
             <p className="text-xl leading-relaxed text-foreground">
-              "{verse.translations[0].text}"
+              "{verse.translations?.text}"
             </p>
           </div>
         )}
