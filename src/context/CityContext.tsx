@@ -9,7 +9,7 @@ interface CityContextType {
 const CityContext = createContext<CityContextType | undefined>(undefined);
 
 export const CityProvider = ({ children }: { children: ReactNode }) => {
-  const [city, setCity] = useState(''); // Default city
+  const [city, setCity] = useState(localStorage.getItem("city") || ""); // Default city
 
   return (
     <CityContext.Provider value={{ city, setCity }}>

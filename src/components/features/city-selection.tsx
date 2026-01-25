@@ -9,6 +9,10 @@ import { cities } from '../../lib/data'
 
 export default function CitySelection() {
   const { city, setCity } = useCity();
+  const handleCityChange = (city: any) => {
+    setCity(city ? city.label : "");
+    localStorage.setItem("city", city ? city.label : "");
+  };
   return (
     <div className="px-4 pt-8 w-full md:pt-12 md:w-[50%] mx-auto">
       <h1 className="font-amiri text-4xl md:text-5xl font-bold">Please Select the City</h1>
@@ -18,7 +22,7 @@ export default function CitySelection() {
           placeholder="Select the city"
           value={city}
           onChange={(e: any) => setCity(e.target ? e.target.value : e)}
-          onSelect={(opt: any) => setCity(opt ? opt.label : "")}
+          onSelect={(opt: any) => handleCityChange(opt)}
         />
       </div>
     </div>

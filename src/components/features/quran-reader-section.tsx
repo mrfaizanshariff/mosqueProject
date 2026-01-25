@@ -147,7 +147,7 @@ export default function QuranReaderPage() {
     if (progress?.scrollPosition && containerRef.current) {
       setTimeout(() => {
         window.scrollTo(0, progress.scrollPosition || 0);
-      }, 100);
+      }, 600);
     }
   }, [progress, loading]); // Added loading dependency to ensure we scroll after content loads
 

@@ -35,10 +35,12 @@ const Header = () => {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/mosques', label: 'Mosques' },
+    { href: '/quranPlayer', label: 'Quran Player' },
+    { href: '/quran', label: 'Quran Reader' },
+    { href: '/ramadan', label: 'Ramadan Companion' },
+    { href: '/submit-mosque', label: 'Add mosque' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
-    { href: '/submit-mosque', label: 'Add mosque' },
   ]
 
   return (
@@ -53,7 +55,7 @@ const Header = () => {
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between py-4">
           <Link href="/" className="flex items-end space-x-2">
-            <Image src="/android-chrome-512x512.png" alt="Logo" width={40} height={40}/> 
+            <Image src="/android-chrome-512x512.png" alt="Logo" width={40} height={40} />
             <span className="font-amiri text-xl md:text-2xl font-bold">Mosques of India</span>
           </Link>
 

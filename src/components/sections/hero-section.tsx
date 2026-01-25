@@ -35,7 +35,7 @@ export function HeroSection() {
     }
     updateTimes()
     const interval = setInterval(updateTimes, 60000)
-    
+
     return () => clearInterval(interval)
   }, [])
 
@@ -63,10 +63,11 @@ export function HeroSection() {
   }
 
   return (
-    
+
     <div className="relative w-full min-h-[80vh] pattern-bg flex items-center">
       <div className="container mx-auto px-4 py-24 md:py-32">
-        <motion.div 
+
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24"
           variants={containerVariants}
           initial="hidden"
@@ -76,11 +77,11 @@ export function HeroSection() {
             <h1 className="font-amiri text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
               Find Prayer Times <br />for Local Mosques
             </h1>
-            
+
             <p className="text-lg md:text-xl text-muted-foreground max-w-md mb-8">
               Stay connected with your local mosques and never miss a prayer with our comprehensive directory of prayer times.
             </p>
-            
+
             <div className="flex flex-wrap gap-4">
               <Button asChild size="lg">
                 <Link href="/mosques">
@@ -88,7 +89,7 @@ export function HeroSection() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              
+
               <Button variant="outline" size="lg" asChild>
                 <Link href="#prayer-times">
                   View Prayer Times
@@ -101,7 +102,7 @@ export function HeroSection() {
               </Button>
             </div>
           </motion.div>
-          
+
           <motion.div
             variants={itemVariants}
             className="bg-background/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-border/40"
@@ -112,13 +113,13 @@ export function HeroSection() {
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               >
-              <Image src="/android-chrome-512x512.png" alt="Logo" className='m-auto' width={80} height={80}/> 
-                
+                <Image src="/android-chrome-512x512.png" alt="Logo" className='m-auto' width={80} height={80} />
+
               </motion.div>
               <h2 className="font-amiri text-2xl font-bold">Prayer Times - {city ? city : 'India'}</h2>
               <p className="text-muted-foreground">Current time: {currentTime}</p>
             </div>
-            
+
             <div className="space-y-6">
               <motion.div
                 className="bg-primary/10 border border-primary/20 rounded-lg p-4"
@@ -128,7 +129,7 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Fajr Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings && timings['Fajr'] ? convert24To12Hour(timings?.["Fajr"]):''}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Fajr'] ? convert24To12Hour(timings?.["Fajr"]) : ''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
@@ -141,7 +142,7 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Zuhar Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings && timings['Dhuhr'] ? convert24To12Hour(timings?.["Dhuhr"]):''}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Dhuhr'] ? convert24To12Hour(timings?.["Dhuhr"]) : ''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
@@ -154,7 +155,7 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Asr Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings && timings['Asr'] ? convert24To12Hour(timings?.["Asr"]):''}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Asr'] ? convert24To12Hour(timings?.["Asr"]) : ''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
@@ -167,7 +168,7 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Maghrib Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings && timings['Maghrib'] ? convert24To12Hour(timings?.["Maghrib"]):''}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Maghrib'] ? convert24To12Hour(timings?.["Maghrib"]) : ''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
@@ -180,14 +181,14 @@ export function HeroSection() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">Isha Prayer Time Start</h3>
-                    <p className="text-2xl font-bold text-primary">{timings && timings['Isha'] ? convert24To12Hour(timings?.["Isha"]):''}</p>
+                    <p className="text-2xl font-bold text-primary">{timings && timings['Isha'] ? convert24To12Hour(timings?.["Isha"]) : ''}</p>
                   </div>
                   <Clock className="h-8 w-8 text-primary" />
                 </div>
               </motion.div>
-              
+
               <Separator />
-              
+
               <motion.div
                 className="bg-accent/10 border border-accent/20 rounded-lg p-4"
                 whileHover={{ scale: 1.02 }}

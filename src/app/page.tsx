@@ -1,4 +1,5 @@
 import { HeroSection } from '../components/sections/hero-section'
+import { RamadanCTA } from '../components/sections/ramadan-cta'
 import { PrayerTimesTable } from '../components/ui/prayer-times-table'
 import { MosqueCard } from '../components/ui/mosque-card'
 import { mosques } from '../lib/data'
@@ -10,31 +11,32 @@ import { QuranQuoteSwitcher } from '../components/features/quran-verse'
 import { PrayerTimingsProvider } from '../context/PrayerTimingsContext'
 import { CityProvider } from '../context/CityContext'
 import CitySelection from '../components/features/city-selection'
-import { Language,QuranClient } from "@quranjs/api";
+import { Language, QuranClient } from "@quranjs/api";
 export default function Home() {
   const client = new QuranClient({
-  clientId: process.env.QURAN_CLIENT_ID!,
-  clientSecret: process.env.QURAN_CLIENT_SECRET!,
-  defaults: {
-    language: Language.ENGLISH,
-  },
-});
+    clientId: process.env.QURAN_CLIENT_ID!,
+    clientSecret: process.env.QURAN_CLIENT_SECRET!,
+    defaults: {
+      language: Language.ENGLISH,
+    },
+  });
   // Only show 3 mosques on the homepage
   const featuredMosques = mosques.slice(0, 3)
 
   return (
-     
+
     <div>
       <div className=' pattern-bg '>
-       
-          <CitySelection />
-        
+
+        <RamadanCTA />
+        <CitySelection />
+
       </div>
-        <HeroSection />
+      <HeroSection />
       <div className='mx-4'>
-      <QuranQuoteSwitcher />
+        <QuranQuoteSwitcher />
       </div>
-          <NearbyMosques mosques={mosques} />
+      <NearbyMosques mosques={mosques} />
       <section id="prayer-times" className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
@@ -45,7 +47,7 @@ export default function Home() {
               Find the up-to-date prayer times for mosques in your area. Stay connected with your local community.
             </p>
           </div>
-          <PrayerTimesTable mosques={mosques} />          
+          <PrayerTimesTable mosques={mosques} />
           <div className="mt-8 text-center">
             <Button asChild>
               <Link href="/mosques">
@@ -54,10 +56,10 @@ export default function Home() {
               </Link>
             </Button>
           </div>
-         
+
         </div>
       </section>
-      
+
       <section className="py-20 pattern-bg">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
@@ -68,15 +70,15 @@ export default function Home() {
               Explore some of the most prominent mosques in our community. Click on any mosque to view detailed information.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredMosques.map((mosque) => (
-             
+
               <MosqueCard key={mosque.id} mosque={mosque} />
-              
+
             ))}
           </div>
-          
+
           <div className="mt-12 text-center">
             <Button asChild>
               <Link href="/mosques">
@@ -87,7 +89,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
       <section className="py-20 bg-accent/10">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
@@ -98,7 +100,7 @@ export default function Home() {
               Our website provides various features to help you stay connected with your local mosques.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-background p-8 rounded-xl shadow-sm border border-border/40 text-center">
               <div className="bg-primary/10 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
@@ -109,7 +111,7 @@ export default function Home() {
                 Get accurate prayer times for all local mosques, updated daily.
               </p>
             </div>
-            
+
             <div className="bg-background p-8 rounded-xl shadow-sm border border-border/40 text-center">
               <div className="bg-secondary/10 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <MapPin className="h-8 w-8 text-secondary" />
@@ -119,7 +121,7 @@ export default function Home() {
                 Find mosques near you with detailed information and directions.
               </p>
             </div>
-            
+
             <div className="bg-background p-8 rounded-xl shadow-sm border border-border/40 text-center">
               <div className="bg-accent/10 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Calendar className="h-8 w-8 text-accent" />
@@ -133,6 +135,6 @@ export default function Home() {
         </div>
       </section>
     </div>
-    
+
   )
 }
