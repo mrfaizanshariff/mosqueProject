@@ -119,6 +119,7 @@ export default function QuranReaderPage() {
   } = useQuranReader(surahNumber, {
     reciterId: RECITER_IDS.MISHARI_AL_AFASY,
     translations: [TRANSLATION_IDS.SAHIH_INTERNATIONAL],
+
   });
 
   const { updateProgress, markSurahCompleted, getProgress } = useQuranProgressStore();
@@ -178,12 +179,14 @@ export default function QuranReaderPage() {
 
       // Update progress if we found a verse
       if (currentVerseNumber > 0) {
-        updateProgress(
-          parseInt(String(surahNumber)),
-          currentVerseNumber,
-          totalVerses,
-          scrollPosition
-        );
+        if (Number(progress?.lastAyahRead) < Number(currentVerseNumber)) {
+          updateProgress(
+            parseInt(String(surahNumber)),
+            currentVerseNumber,
+            totalVerses,
+            scrollPosition
+          );
+        }
       }
 
       // Show mark complete button near bottom

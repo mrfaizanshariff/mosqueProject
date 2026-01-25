@@ -2,6 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -44,6 +45,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 222 47% 11%;
     --foreground: 0 0% 98%;
@@ -76,46 +78,79 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-amiri font-bold;
   }
-  p, span, a, li, button, input, textarea, table {
+
+  p,
+  span,
+  a,
+  li,
+  button,
+  input,
+  textarea,
+  table {
     @apply font-sans;
   }
 }
-  @font-face {
-      font-family: 'UthmanicHafs';
-      src: url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.woff2') format('woff2'),
-           url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.ttf') format('truetype');
-      font-display: swap;
-    }
-  @font-face {
+
+@font-face {
+  font-family: 'UthmanicHafs';
+  src: url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.woff2') format('woff2'),
+    url('https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IndoPak';
+  src: url('https://static-cdn.tarteel.ai/qul/fonts/nastaleeq/Hanafi/normal-v4.2.2/with-waqf-lazmi/font.ttf') format('truetype');
+  font-display: swap;
+}
+
+/* @font-face {
       font-family: 'IndoPak';
       src: url('https://verses.quran.foundation/fonts/quran/hafs/indopak-nastaleeq-waqf-lazim-v4.2.1.ttf') format('truetype'),
            url('https://verses.quran.foundation/fonts/quran/hafs/indopak-nastaleeq-waqf-lazim-v4.2.1.woff') format('woff2');
       font-display: swap;
-    }
+    } */
 
-    .quran-text {
-      font-family: 'UthmanicHafs', 'Traditional Arabic', serif;
-      font-size: 28px;
-      line-height: 2;
-      direction: rtl;
-      text-align: right;
-    }
+.quran-text {
+  font-family: 'IndoPak', 'Traditional Arabic', serif;
+  font-size: 2.2rem;
+  line-height: 2;
+  direction: rtl;
+  text-align: right;
+}
+
+.quran-text-small {
+  font-family: 'IndoPak', 'Traditional Arabic', serif;
+  font-size: 1rem;
+  line-height: 1;
+  direction: rtl;
+  text-align: right;
+}
+
 .font-amiri {
   font-family: "Syne", serif;
 }
+
 * {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 .font-sans {
-  font-family:  "Google Sans Flex", sans-serif;
+  font-family: "Google Sans Flex", sans-serif;
 }
 
 /* Islamic pattern background */
@@ -131,9 +166,12 @@
 
 /* Prayer time highlight animation */
 @keyframes prayerTimeGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 5px 2px rgba(16, 185, 129, 0.3);
   }
+
   50% {
     box-shadow: 0 0 10px 5px rgba(16, 185, 129, 0.5);
   }

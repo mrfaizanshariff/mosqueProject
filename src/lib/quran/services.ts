@@ -52,7 +52,7 @@ export class ChapterService {
   /**
    * Get chapter by ID
    */
-  static async getById(id: ChapterId, options?: { language?: Language }) {
+  static async getById(id: ChapterId, options?: { language?: Language, fields?: string }) {
     const cacheKey = `chapter:${id}:${options?.language || 'default'}`;
     const cached = this.cache.get(cacheKey);
 
@@ -62,7 +62,7 @@ export class ChapterService {
 
     try {
       const client = getQuranClient();
-    //   const chapter = await client.verses.findByChapter(id, options);
+      //   const chapter = await client.verses.findByChapter(id, options);
       const chapter = await client.chapters.findById(id, options);
 
       this.cache.set(cacheKey, {
@@ -168,7 +168,7 @@ export class VerseService {
         tafsirs: options?.tafsirs,
         words: options?.words ?? true,
         wordFields: {
-         textUthmani: true,
+          textUthmani: true,
         },
       });
     } catch (error) {
@@ -255,39 +255,39 @@ export class AudioService {
     chapterId: ChapterId,
     reciterId: string = '7',
     options: {
-        segments?: boolean; // Word-by-word timing
+      segments?: boolean; // Word-by-word timing
     }
   ) {
     try {
       const client = getQuranClient();
-       // Save current config
+      // Save current config
       const currentConfig = client.getConfig();
-    //   client.updateConfig({ defaults: { language: undefined } });
-    //   const audio = client.audio.findAllChapterRecitations(reciterId);;
-    // const audio = await client.fetcher.fetch(`/content/api/v4/chapter_recitations/${reciterId}/${chapterId}`, options);
-      const audio = await client.audio.findChapterRecitationById(reciterId,chapterId,options);
-        
+      //   client.updateConfig({ defaults: { language: undefined } });
+      //   const audio = client.audio.findAllChapterRecitations(reciterId);;
+      // const audio = await client.fetcher.fetch(`/content/api/v4/chapter_recitations/${reciterId}/${chapterId}`, options);
+      const audio = await client.audio.findChapterRecitationById(reciterId, chapterId, options);
+
       // Restore original config
-    //   client.updateConfig(currentConfig);
+      //   client.updateConfig(currentConfig);
       return audio as any;
 
-    //  const url = `${QURAN_API_BASE}/chapter_recitations/${reciterId}/${chapterId}?${options.segments ? 'segments=true' : ''}`;
-    
-    // const response = await fetch(url, {
-    //   headers: { 'Accept': 'application/json',
-    //      'x-auth-token': , 
-    //      'x-client-id': '6ce99855-56fd-4016-a6ce-ab01cf15a83b'
-    //    }
-    // });
-    
-    // const data = await response.json();
-    
-    // return {
-    //   audioUrl: data.audio_file?.audio_url,
-    //   duration: data.audio_file?.duration,
-    //   verseTimings: data.audio_file?.verse_timings
-    //   // ... normalized structure
-    // };
+      //  const url = `${QURAN_API_BASE}/chapter_recitations/${reciterId}/${chapterId}?${options.segments ? 'segments=true' : ''}`;
+
+      // const response = await fetch(url, {
+      //   headers: { 'Accept': 'application/json',
+      //      'x-auth-token': , 
+      //      'x-client-id': '6ce99855-56fd-4016-a6ce-ab01cf15a83b'
+      //    }
+      // });
+
+      // const data = await response.json();
+
+      // return {
+      //   audioUrl: data.audio_file?.audio_url,
+      //   duration: data.audio_file?.duration,
+      //   verseTimings: data.audio_file?.verse_timings
+      //   // ... normalized structure
+      // };
     } catch (error) {
       console.error(
         `Error fetching audio for chapter ${chapterId}:`,
@@ -397,12 +397,12 @@ export const TRANSLATION_IDS = {
   SAHIH_INTERNATIONAL: 131,
   CLEAR_QURAN: 20,
   MUSTAFA_KHATTAB: 95,
-  
+
   // Urdu
   ABUL_ALA_MAUDUDI: 97,
-  
+
   // Arabic
   TAFSIR_JALALAYN: 74,
-  
+
   // Add more as needed
 } as const;

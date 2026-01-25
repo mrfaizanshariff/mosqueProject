@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, BookOpen, Heart, TrendingUp, BookMarked, Play } from 'lucide-react';
+import { Search, BookOpen, Heart, TrendingUp, BookMarked, Play, Speaker } from 'lucide-react';
 import { useChapters } from '../hooks/useQuran';
 import { useQuranProgressStore } from '../../store/quranProgressStore';
 import SurahCard from '../../components/quran/SurahCard';
 import AyahOfTheDay from '../../components/quran/AyahOfTheDay';
 import ProgressStats from '../../components/quran/ProgressStats';
+import Link from 'next/link';
 
 // Most loved surahs (predefined)
 const MOST_LOVED_SURAHS = [1, 2, 18, 36, 55, 67, 112, 113, 114];
@@ -30,7 +31,7 @@ export default function QuranLandingPage() {
 
     const query = searchQuery.toLowerCase();
     return chapters.filter(
-      (chapter:any) =>
+      (chapter: any) =>
         chapter.nameSimple.toLowerCase().includes(query) ||
         chapter.nameArabic.includes(query) ||
         chapter.id.toString() === query
@@ -40,13 +41,13 @@ export default function QuranLandingPage() {
   // Most loved surahs
   const mostLovedSurahs = useMemo(() => {
     if (!chapters) return [];
-    return chapters.filter((ch:any) => MOST_LOVED_SURAHS.includes(ch.id));
+    return chapters.filter((ch: any) => MOST_LOVED_SURAHS.includes(ch.id));
   }, [chapters]);
 
   // Favorites
   const favoriteSurahs = useMemo(() => {
     if (!chapters) return [];
-    return chapters.filter((ch:any) => favorites.includes(ch.id));
+    return chapters.filter((ch: any) => favorites.includes(ch.id));
   }, [chapters, favorites]);
 
   // Infinite scroll
@@ -103,7 +104,7 @@ export default function QuranLandingPage() {
           {/* Progress Stats */}
           <ProgressStats />
 
-        
+
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
@@ -126,6 +127,19 @@ export default function QuranLandingPage() {
               <BookOpen className="w-5 h-5" />
               Start from Beginning
             </button>
+            <button
+              onClick={() => handleSurahClick(1)}
+              className="px-8 py-4 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary/5 transition flex items-center justify-center gap-2"
+            >
+              <Link href="/quranPlayer">
+                <span className="flex items-center gap-2">
+                  <Speaker className="w-5 h-5" />
+                  <span>
+                    Listen to Quran
+                  </span>
+                </span>
+              </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -146,7 +160,7 @@ export default function QuranLandingPage() {
             </div>
             <div className="overflow-x-auto pb-4">
               <div className="flex gap-4 min-w-min">
-                {favoriteSurahs.map((surah:any) => (
+                {favoriteSurahs.map((surah: any) => (
                   <div key={surah.id} className="w-80 flex-shrink-0">
                     <SurahCard
                       surah={surah}
@@ -167,7 +181,7 @@ export default function QuranLandingPage() {
           </div>
           <div className="overflow-x-auto pb-4">
             <div className="flex gap-4 min-w-min">
-              {mostLovedSurahs.map((surah:any) => (
+              {mostLovedSurahs.map((surah: any) => (
                 <div key={surah.id} className="w-80 flex-shrink-0">
                   <SurahCard
                     surah={surah}
@@ -180,19 +194,19 @@ export default function QuranLandingPage() {
           </div>
         </section>
 
-  {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mt-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by Surah name or number..."
-                className="w-full pl-12 pr-4 py-4 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg"
-              />
-            </div>
+        {/* Search Bar */}
+        <div className="max-w-2xl mx-auto mt-8">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by Surah name or number..."
+              className="w-full pl-12 pr-4 py-4 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg"
+            />
           </div>
+        </div>
         {/* All Surahs */}
         <section>
           <div className="flex items-center gap-2 mb-6">
@@ -206,7 +220,7 @@ export default function QuranLandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredChapters.slice(0, displayCount).map((surah:any) => (
+            {filteredChapters.slice(0, displayCount).map((surah: any) => (
               <SurahCard
                 key={surah.id}
                 surah={surah}

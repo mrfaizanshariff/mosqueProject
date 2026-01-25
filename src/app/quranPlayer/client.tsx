@@ -15,6 +15,7 @@ import {
     SelectValue,
 } from '../../../components/ui/select';
 import { useRouter } from 'next/navigation';
+import { Autocomplete } from '../../../components/ui/auto-complete';
 
 // Hardcoded popular reciters
 const RECITERS = [
@@ -163,7 +164,7 @@ export default function QuranPlayerClient() {
                                 <h2 className="text-3xl md:text-5xl font-amiri font-bold">
                                     {currentSurah?.nameSimple ?? 'Loading...'}
                                 </h2>
-                                <p className="text-xl text-muted-foreground font-arabic" dir="rtl">
+                                <p className="text-xl text-muted-foreground quran-text-small" dir="rtl">
                                     {currentSurah?.nameArabic}
                                 </p>
                                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mt-2">
@@ -174,7 +175,7 @@ export default function QuranPlayerClient() {
                             </div>
 
                             {/* Visualizer Placeholder / Art */}
-                            <div className="relative h-32 md:h-48 flex items-center justify-center mb-8">
+                            <div className="relative h-4 md:h-48 flex items-center justify-center mb-8">
                                 {/* Simulated Waveform */}
                                 <div className="flex items-end gap-1 h-full w-full justify-center opacity-80">
                                     {isPlaying ? (
@@ -226,6 +227,7 @@ export default function QuranPlayerClient() {
                                         aria-label="Previous Surah"
                                     >
                                         <SkipBack className="w-8 h-8" />
+
                                     </button>
 
                                     <button
@@ -252,6 +254,7 @@ export default function QuranPlayerClient() {
                                         aria-label="Next Surah"
                                     >
                                         <SkipForward className="w-8 h-8" />
+
                                     </button>
                                 </div>
                             </div>
@@ -318,7 +321,7 @@ export default function QuranPlayerClient() {
                                                     <SelectItem key={s.id} value={s.id.toString()}>
                                                         <div className="flex justify-between w-full min-w-[200px]">
                                                             <span>{s.id}. {s.nameSimple}</span>
-                                                            <span className="font-arabic">{s.nameArabic}</span>
+                                                            <span className="quran-text-small">{s.nameArabic}</span>
                                                         </div>
                                                     </SelectItem>
                                                 ))
