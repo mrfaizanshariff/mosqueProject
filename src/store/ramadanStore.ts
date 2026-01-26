@@ -2,17 +2,17 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { 
-  RamadanStore, 
-  DailyProgress, 
-  Goal, 
+import {
+  RamadanStore,
+  DailyProgress,
+  Goal,
   QuranPlan,
-  SalahProgress, 
-  DhikrGoal
+  SalahProgress,
+  DhikrType
 } from '../types/ramadan';
-import { 
-  getTodayDate, 
-  calculateRamadanDay, 
+import {
+  getTodayDate,
+  calculateRamadanDay,
   calculateOverallProgress,
   recalculateQuranPlan,
   getDefaultGoals
@@ -32,7 +32,7 @@ const initialState = {
       night: '21:00'
     },
     autoAdjustOnMiss: true,
-    startDate: '2025-02-18' // Update this to actual Ramadan start date
+    startDate: '2025-02-28' // Updated for 2025 Ramadan
   }
 };
 
@@ -55,7 +55,7 @@ export const useRamadanStore = create<RamadanStore>()(
       })),
 
       toggleGoal: (goalId) => set((state) => ({
-        goals: state.goals.map(g => 
+        goals: state.goals.map(g =>
           g.id === goalId ? { ...g, enabled: !g.enabled } : g
         )
       })),
@@ -65,34 +65,31 @@ export const useRamadanStore = create<RamadanStore>()(
       // Quran actions
       setQuranPlan: (plan) => set({ quranPlan: plan }),
 
-      updateQuranProgress: (date, pagesRead) => set((state) => {
+      updateQuranProgress: (date, value) => set((state) => {
         const progress = state.dailyProgress[date] || { date, habits: {} };
         const currentQuran = progress.habits.quran || { completed: false };
-        
+        const unit = state.quranPlan?.unit || 'pages';
+
+        const newProgress = { ...currentQuran };
+        if (unit === 'pages') newProgress.pagesRead = (newProgress.pagesRead || 0) + value;
+        else if (unit === 'juz') newProgress.juzRead = (newProgress.juzRead || 0) + value;
+        else if (unit === 'verses') newProgress.versesRead = (newProgress.versesRead || 0) + value;
+
         return {
           dailyProgress: {
             ...state.dailyProgress,
-            [date]: {
-              ...progress,
-              habits: {
-                ...progress.habits,
-                quran: {
-                  ...currentQuran,
-                  pagesRead: (currentQuran.pagesRead || 0) + pagesRead
-                }
-              }
-            }
+            [date]: { ...progress, habits: { ...progress.habits, quran: newProgress } }
           },
           quranPlan: state.quranPlan ? {
             ...state.quranPlan,
-            totalCompleted: state.quranPlan.totalCompleted + pagesRead
+            totalCompleted: state.quranPlan.totalCompleted + value
           } : undefined
         };
       }),
 
       markQuranComplete: (date) => set((state) => {
         const progress = state.dailyProgress[date] || { date, habits: {} };
-        
+
         return {
           dailyProgress: {
             ...state.dailyProgress,
@@ -142,7 +139,7 @@ export const useRamadanStore = create<RamadanStore>()(
       // Taraweeh actions
       toggleTaraweeh: (date) => set((state) => {
         const progress = state.dailyProgress[date] || { date, habits: {} };
-        
+
         return {
           dailyProgress: {
             ...state.dailyProgress,
@@ -180,15 +177,23 @@ export const useRamadanStore = create<RamadanStore>()(
       }),
 
       // Dhikr actions
-      incrementDhikr: (date, count = 1) => set((state) => {
+      incrementDhikr: (date, dhikrTypeId, count = 1) => set((state) => {
         const progress = state.dailyProgress[date] || { date, habits: {} };
-        const currentDhikr = progress.habits.dhikr || { completed: false, count: 0 };
-        const newCount = currentDhikr.count + count;
-        
-        // Check if goal is met
-        const dhikrGoal = state.goals.find(g => g.type === {} as DhikrGoal);
+        const currentDhikr = progress.habits.dhikr || { completed: false, totalCount: 0, counts: {} };
+
+        const newCounts = { ...currentDhikr.counts };
+        newCounts[dhikrTypeId] = (newCounts[dhikrTypeId] || 0) + count;
+
+        const newTotalCount = currentDhikr.totalCount + count;
+
+        // Find dhikr goal to check completion
+        const dhikrGoal = state.goals.find(g => g.type === 'dhikr');
+        const specificType = dhikrGoal?.dhikrTypes?.find(t => t.id === dhikrTypeId);
+
+        // Completion logic: for now, total count completion if simple target, 
+        // or check all specified types if specific targets (simplified for now to total)
         const dailyTarget = dhikrGoal?.dailyTarget || 100;
-        
+
         return {
           dailyProgress: {
             ...state.dailyProgress,
@@ -197,15 +202,17 @@ export const useRamadanStore = create<RamadanStore>()(
               habits: {
                 ...progress.habits,
                 dhikr: {
-                  count: newCount,
-                  completed: newCount >= dailyTarget
+                  ...currentDhikr,
+                  counts: newCounts,
+                  totalCount: newTotalCount,
+                  completed: newTotalCount >= dailyTarget
                 }
               }
             }
           },
           dhikrProgress: {
             ...state.dhikrProgress,
-            [date]: newCount
+            [date]: newTotalCount
           }
         };
       }),
@@ -244,10 +251,18 @@ export const useRamadanStore = create<RamadanStore>()(
         );
       },
 
+      syncQuranProgress: (ayahsRead) => {
+        const state = get();
+        if (state.quranPlan?.unit === 'verses') {
+          const today = getTodayDate();
+          state.updateQuranProgress(today, ayahsRead);
+        }
+      },
+
       syncToAccount: async (userId) => {
         // This would sync localStorage data to backend
         set({ userMode: 'loggedIn', userId });
-        
+
         // TODO: Implement actual API call
         console.log('Syncing to account:', userId);
       },
