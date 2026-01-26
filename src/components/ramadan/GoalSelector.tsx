@@ -241,8 +241,8 @@ export default function GoalSelector() {
                           e.stopPropagation();
                           const name = prompt('Enter Dhikr Name:');
                           const target = parseInt(prompt('Enter Daily Target:', '100') || '100');
-                          if (name) {
-                            handleToggleDhikrType({ id: `dhikr-${Date.now()}`, name, target });
+                          if (name && !isNaN(target) && target > 0) {
+                            handleToggleDhikrType({ id: `dhikr-${Date.now()}-${Math.floor(Math.random() * 1000)}`, name, target });
                           }
                         }}
                         className="w-full py-3 border-2 border-dashed border-border rounded-xl hover:border-primary/50 hover:bg-primary/5 transition-all text-sm font-medium text-muted-foreground flex items-center justify-center gap-2"

@@ -32,7 +32,7 @@ const initialState = {
       night: '21:00'
     },
     autoAdjustOnMiss: true,
-    startDate: '2025-02-28' // Updated for 2025 Ramadan
+    startDate: '2026-02-28' // Updated for 2025 Ramadan
   }
 };
 
@@ -177,6 +177,47 @@ export const useRamadanStore = create<RamadanStore>()(
       }),
 
       // Dhikr actions
+      addDhikrType: (type) => set((state) => {
+        console.log('Adding Dhikr Type:', type);
+        const DEFAULT_DHIKR_TYPES = [
+          { id: 'subhanallah', name: 'SubhanAllah', target: 33 },
+          { id: 'alhamdulillah', name: 'Alhamdulillah', target: 33 },
+          { id: 'allahuakbar', name: 'Allahu Akbar', target: 34 }
+        ];
+
+        const dhikrGoalExists = state.goals.some(g => g.type === 'dhikr');
+        let newGoals;
+
+        if (dhikrGoalExists) {
+          newGoals = state.goals.map(g => {
+            if (g.type === 'dhikr') {
+              const currentTypes = g.dhikrTypes || DEFAULT_DHIKR_TYPES;
+              const newTypes = [...currentTypes, type];
+              return {
+                ...g,
+                dhikrTypes: newTypes,
+                dailyTarget: newTypes.reduce((acc, t) => acc + t.target, 0)
+              };
+            }
+            return g;
+          });
+        } else {
+          console.log('Creating new Dhikr goal');
+          // Create new goal if missing
+          const newGoal: Goal = {
+            id: 'dhikr',
+            type: 'dhikr',
+            name: 'Daily Dhikr',
+            enabled: true,
+            dailyTarget: 100 + type.target,
+            dhikrTypes: [...DEFAULT_DHIKR_TYPES, type]
+          };
+          newGoals = [...state.goals, newGoal];
+        }
+
+        return { goals: newGoals };
+      }),
+
       incrementDhikr: (date, dhikrTypeId, count = 1) => set((state) => {
         const progress = state.dailyProgress[date] || { date, habits: {} };
         const currentDhikr = progress.habits.dhikr || { completed: false, totalCount: 0, counts: {} };
@@ -188,10 +229,6 @@ export const useRamadanStore = create<RamadanStore>()(
 
         // Find dhikr goal to check completion
         const dhikrGoal = state.goals.find(g => g.type === 'dhikr');
-        const specificType = dhikrGoal?.dhikrTypes?.find(t => t.id === dhikrTypeId);
-
-        // Completion logic: for now, total count completion if simple target, 
-        // or check all specified types if specific targets (simplified for now to total)
         const dailyTarget = dhikrGoal?.dailyTarget || 100;
 
         return {
@@ -217,12 +254,32 @@ export const useRamadanStore = create<RamadanStore>()(
         };
       }),
 
-      resetDhikr: (date) => set((state) => ({
-        dhikrProgress: {
-          ...state.dhikrProgress,
-          [date]: 0
-        }
-      })),
+      resetDhikr: (date) => set((state) => {
+        const progress = state.dailyProgress[date] || { date, habits: {} };
+
+        const newDailyProgress = {
+          ...state.dailyProgress,
+          [date]: {
+            ...progress,
+            habits: {
+              ...progress.habits,
+              dhikr: {
+                completed: false,
+                totalCount: 0,
+                counts: {}
+              }
+            }
+          }
+        };
+
+        return {
+          dailyProgress: newDailyProgress,
+          dhikrProgress: {
+            ...state.dhikrProgress,
+            [date]: 0
+          }
+        };
+      }),
 
       // Settings actions
       updateSettings: (settings) => set((state) => ({

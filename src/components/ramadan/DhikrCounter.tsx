@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import { useRamadanStore } from '../../store/ramadanStore';
 import { getTodayDate } from '../../utils/ramadanCalculation';
+import { DhikrType } from '../../types/ramadan';
 import { RotateCcw, Target, ChevronRight, Check, Plus, Hash } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -13,35 +14,57 @@ interface DhikrCounterProps {
 }
 
 export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
-  const { goals, dailyProgress, incrementDhikr, resetDhikr } = useRamadanStore();
+  const { goals, dailyProgress, incrementDhikr, resetDhikr, setGoals, addDhikrType } = useRamadanStore();
 
   const today = getTodayDate();
   const todayProgress = dailyProgress[today] || { date: today, habits: {} };
   const dhikrProgress = todayProgress.habits.dhikr || { completed: false, totalCount: 0, counts: {} };
 
-  const dhikrGoal = goals.find(g => (g.type as string) === 'dhikr' && g.enabled);
+  const dhikrGoal = goals.find(g => (g.type as string) === 'dhikr');
   const configuredTypes = dhikrGoal?.dhikrTypes || [
     { id: 'subhanallah', name: 'SubhanAllah', target: 33 },
     { id: 'alhamdulillah', name: 'Alhamdulillah', target: 33 },
     { id: 'allahuakbar', name: 'Allahu Akbar', target: 34 }
   ];
 
-  const [selectedTypeId, setSelectedTypeId] = useState<string>(configuredTypes[0]?.id || 'subhanallah');
-  const selectedType = configuredTypes.find(t => t.id === selectedTypeId) || configuredTypes[0];
+  // Ensure selectedTypeId is valid when types change
+  const [selectedTypeId, setSelectedTypeId] = useState<string>('subhanallah');
+  const pendingSelection = React.useRef<string | null>(null);
+
+  // Update selection if the current selection is lost or on init
+  React.useEffect(() => {
+    if (configuredTypes.length > 0) {
+      // If we have a pending selection and it now exists, select it
+      if (pendingSelection.current && configuredTypes.some(t => t.id === pendingSelection.current)) {
+        setSelectedTypeId(pendingSelection.current);
+        pendingSelection.current = null;
+        return;
+      }
+
+      const typeExists = configuredTypes.some(t => t.id === selectedTypeId);
+      if (!typeExists) {
+        setSelectedTypeId(configuredTypes[0].id);
+      }
+    }
+  }, [configuredTypes, selectedTypeId]);
+
+  const selectedType = configuredTypes.find(t => t.id === selectedTypeId) || configuredTypes[0] || { id: 'unknown', name: 'Unknown', target: 100 };
 
   const handleIncrement = (typeId: string, amount: number = 1) => {
     incrementDhikr(today, typeId, amount);
   };
 
   const handleReset = () => {
-    if (window.confirm('Are you sure you want to reset today\'s count?')) {
+    // Using simple confirm for now
+    if (typeof window !== 'undefined' && window.confirm('Reset today\'s count?')) {
+      console.log('Resetting dhikr stats...');
       resetDhikr(today);
     }
   };
 
-  const currentCount = dhikrProgress.counts[selectedTypeId] || 0;
-  const target = selectedType?.target || 100;
-  const progress = Math.min((currentCount / target) * 100, 100);
+  const currentCount = dhikrProgress.counts?.[selectedTypeId] || 0;
+  const target = selectedType.target || 100;
+  const progress = target > 0 ? Math.min((currentCount / target) * 100, 100) : 0;
 
   if (compact) {
     return (
@@ -108,21 +131,11 @@ export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
               const name = prompt('Enter Dhikr Name:');
               const targetStr = prompt('Enter Daily Target:', '100');
               const target = parseInt(targetStr || '100');
-              if (name && !isNaN(target)) {
-                const { goals, setGoals } = useRamadanStore.getState();
-                const dhikrGoal = goals.find(g => g.type === 'dhikr');
-                if (dhikrGoal) {
-                  const newTypes = [...(dhikrGoal.dhikrTypes || []), { id: `dhikr-${Date.now()}`, name, target }];
-                  const newGoals = goals.map(g =>
-                    g.type === 'dhikr' ? {
-                      ...g,
-                      dhikrTypes: newTypes,
-                      dailyTarget: newTypes.reduce((acc, t) => acc + t.target, 0)
-                    } : g
-                  );
-                  setGoals(newGoals);
-                  setSelectedTypeId(newTypes[newTypes.length - 1].id);
-                }
+              if (name && !isNaN(target) && target > 0) {
+                const newType = { id: `dhikr-${Date.now()}-${Math.floor(Math.random() * 1000)}`, name, target };
+                addDhikrType(newType);
+                // Defer selection until store updates
+                pendingSelection.current = newType.id;
               }
             }}
             className="flex-shrink-0 w-12 h-12 rounded-2xl border-2 border-dashed border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all"

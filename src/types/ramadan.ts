@@ -95,6 +95,7 @@ export type RamadanActions = {
   addGoal: (goal: Goal) => void;
   removeGoal: (goalId: string) => void;
   toggleGoal: (goalId: string) => void;
+  addDhikrType: (type: DhikrType) => void;
 
   // Quran
   setQuranPlan: (plan: QuranPlan) => void;
