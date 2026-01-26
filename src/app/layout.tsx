@@ -7,17 +7,17 @@ import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { CityProvider } from '../context/CityContext';
 import { PrayerTimingsProvider } from '../context/PrayerTimingsContext';
 import { Analytics } from "@vercel/analytics/next"
-const amiri = Amiri({
-  subsets: ['arabic'],
-  weight: ['400', '700'],
-  variable: '--font-amiri'
-});
+// const amiri = Amiri({
+//   subsets: ['arabic'],
+//   weight: ['400', '700'],
+//   variable: '--font-amiri'
+// });
 
-const notoSans = Noto_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-noto-sans'
-});
+// const notoSans = Noto_Sans({
+//   subsets: ['latin'],
+//   weight: ['400', '500', '700'],
+//   variable: '--font-noto-sans'
+// });
 
 export const metadata: Metadata = {
   title: 'Mosque of India | Prayer Times, Quran & More',
@@ -49,7 +49,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${amiri.variable} ${notoSans.variable} font-sans`}>
+      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
