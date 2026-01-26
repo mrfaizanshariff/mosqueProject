@@ -35,8 +35,10 @@ function getDailyVerseKey(): VerseKey {
 export default function AyahOfTheDay() {
   const [verseKey] = useState<VerseKey>(getDailyVerseKey());
 
-  const { data: verse, loading } = useRandomVerse({
+  const { data: verse, loading } = useVerse(verseKey, {
     translations: [TRANSLATION_IDS.SAHIH_INTERNATIONAL],
+    words: true,
+    fields: 'textIndopak'
   });
 
   if (loading || !verse) {
@@ -68,17 +70,17 @@ export default function AyahOfTheDay() {
 
         {/* Arabic Text */}
         <div className="mb-6 text-right" dir="rtl">
-          <p className="text-3xl md:text-4xl leading-loose text-foreground font-arabic">
+          <p className="text-3xl md:text-4xl leading-loose text-foreground ">
             {actualWords.map((word: any) => (
-              <span key={word.id} className="mx-1">
-                {word.text || word.textIndopak}
+              <span key={word.id} className="mx-1 quran-text-uthmani">
+                {word.text || word.textUthmani}
               </span>
             ))}
           </p>
         </div>
 
         {/* Transliteration */}
-        <div className="mb-4 text-muted-foreground italic text-lg">
+        <div className="mb-4 text-foreground italic text-lg">
           {actualWords.map((word: any, index: number) => (
             <span key={word.id}>
               {word.transliteration?.text}
@@ -86,15 +88,14 @@ export default function AyahOfTheDay() {
             </span>
           ))}
         </div>
-
-        {/* Translation */}
-        {verse.translations?.[0] && (
-          <div className="mb-6">
-            <p className="text-xl leading-relaxed text-foreground">
-              "{verse.translations?.text}"
-            </p>
-          </div>
-        )}
+        <div className="mb-4 text-muted-foreground text-lg">
+          {actualWords.map((word: any, index: number) => (
+            <span key={word.id}>
+              {word.translation?.text}
+              {index < actualWords.length - 1 ? ' ' : ''}
+            </span>
+          ))}
+        </div>
 
         {/* Reference */}
         <div className="flex items-center justify-between pt-4 border-t border-border">

@@ -7,22 +7,32 @@ import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { CityProvider } from '../context/CityContext';
 import { PrayerTimingsProvider } from '../context/PrayerTimingsContext';
 import { Analytics } from "@vercel/analytics/next"
-const amiri = Amiri({ 
+const amiri = Amiri({
   subsets: ['arabic'],
   weight: ['400', '700'],
   variable: '--font-amiri'
 });
 
-const notoSans = Noto_Sans({ 
+const notoSans = Noto_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
   variable: '--font-noto-sans'
 });
 
 export const metadata: Metadata = {
-  title: 'Mosque Finder | Prayer Times Directory',
-  description: 'Find prayer times for mosques in your city',
-   icons: {
+  title: 'Mosque of India | Prayer Times, Quran & More',
+  description: 'Find prayer times, read and listen to the Holy Quran, and more.',
+  applicationName: 'Mosque of India',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Mosque of India',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  themeColor: '#ffffff',
+  icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
@@ -49,12 +59,12 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow">
-            <CityProvider>
-              <PrayerTimingsProvider>
-              {children}<Analytics/>
-              </PrayerTimingsProvider>
-            </CityProvider>
-              </main>
+              <CityProvider>
+                <PrayerTimingsProvider>
+                  {children}<Analytics />
+                </PrayerTimingsProvider>
+              </CityProvider>
+            </main>
             <Footer />
           </div>
         </ThemeProvider>

@@ -127,11 +127,12 @@ export function useVerse(
   options?: {
     translations?: number[];
     words?: boolean;
+    fields?: string;
   }
 ) {
   return useAsync(
     () => QuranApi.verses.getByKey(verseKey, options),
-    [verseKey, JSON.stringify(options?.translations), options?.words]
+    [verseKey, JSON.stringify(options?.translations), options?.words, options?.fields]
   );
 }
 

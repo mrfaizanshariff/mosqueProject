@@ -150,6 +150,101 @@ export default function QuranPlayerClient() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
+                    {/* Sidebar / Selection & History */}
+                    <div className="lg:col-span-4 space-y-6">
+
+                        {/* Settings Card */}
+                        <div className="bg-card/50 backdrop-blur-sm border border-border p-6 rounded-2xl space-y-4">
+                            <h3 className="font-bold text-lg flex items-center gap-2">
+                                <ListMusic className="w-5 h-5 text-primary" />
+                                Playback Settings
+                            </h3>
+
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label htmlFor="surah-select-trigger" className="text-sm font-medium text-muted-foreground">Select Surah</label>
+                                    <Select
+                                        value={selectedSurahId.toString()}
+                                        onValueChange={(val) => setSelectedSurahId(parseInt(val))}
+                                    >
+                                        <SelectTrigger id="surah-select-trigger" className="w-full h-12">
+                                            <SelectValue placeholder="Select Surah" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {chaptersLoading ? (
+                                                <div className="p-2 text-center text-sm">Loading Surahs...</div>
+                                            ) : (
+                                                chapters?.map((s: any) => (
+                                                    <SelectItem key={s.id} value={s.id.toString()}>
+                                                        <div className="flex justify-between w-full min-w-[200px]">
+                                                            <span>{s.id}. {s.nameSimple}</span>
+                                                            <span className="quran-text-small">{s.nameArabic}</span>
+                                                        </div>
+                                                    </SelectItem>
+                                                ))
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="reciter-select-trigger" className="text-sm font-medium text-muted-foreground">Select Reciter</label>
+                                    <Select
+                                        value={selectedReciterId}
+                                        onValueChange={setSelectedReciterId}
+                                    >
+                                        <SelectTrigger id="reciter-select-trigger" className="w-full h-12">
+                                            <SelectValue placeholder="Select Reciter" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {RECITERS.map((r) => (
+                                                <SelectItem key={r.id} value={r.id}>
+                                                    {r.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Most Played / History */}
+                        <div className="bg-card/50 backdrop-blur-sm border border-border p-6 rounded-2xl">
+                            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                                Recently Played
+                            </h3>
+
+                            {recentSurahs.length > 0 ? (
+                                <div className="space-y-3">
+                                    {recentSurahs.map((progress: any) => {
+                                        const ch = chapters?.find((c: any) => c.id === progress.surahId);
+                                        if (!ch) return null;
+                                        return (
+                                            <button
+                                                key={progress.surahId}
+                                                onClick={() => setSelectedSurahId(progress.surahId)}
+                                                className={`w-full text-left p-3 rounded-xl transition flex items-center justify-between group ${selectedSurahId === progress.surahId ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'}`}
+                                            >
+                                                <div>
+                                                    <p className="font-bold text-sm">{ch.nameSimple}</p>
+                                                    <p className={`text-xs ${selectedSurahId === progress.surahId ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                                                        Last read {new Date(progress.lastReadAt).toLocaleDateString()}
+                                                    </p>
+                                                </div>
+                                                <Play className={`w-4 h-4 opacity-0 group-hover:opacity-100 transition ${selectedSurahId === progress.surahId ? 'fill-white' : 'fill-primary'}`} />
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8 text-muted-foreground text-sm">
+                                    History will appear here once you start listening.
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
                     {/* Main Player Section */}
                     <div className="lg:col-span-8 space-y-6">
 
@@ -293,101 +388,7 @@ export default function QuranPlayerClient() {
 
                     </div>
 
-                    {/* Sidebar / Selection & History */}
-                    <div className="lg:col-span-4 space-y-6">
 
-                        {/* Settings Card */}
-                        <div className="bg-card/50 backdrop-blur-sm border border-border p-6 rounded-2xl space-y-4">
-                            <h3 className="font-bold text-lg flex items-center gap-2">
-                                <ListMusic className="w-5 h-5 text-primary" />
-                                Playback Settings
-                            </h3>
-
-                            <div className="space-y-4">
-                                <div className="space-y-2">
-                                    <label htmlFor="surah-select-trigger" className="text-sm font-medium text-muted-foreground">Select Surah</label>
-                                    <Select
-                                        value={selectedSurahId.toString()}
-                                        onValueChange={(val) => setSelectedSurahId(parseInt(val))}
-                                    >
-                                        <SelectTrigger id="surah-select-trigger" className="w-full h-12">
-                                            <SelectValue placeholder="Select Surah" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {chaptersLoading ? (
-                                                <div className="p-2 text-center text-sm">Loading Surahs...</div>
-                                            ) : (
-                                                chapters?.map((s: any) => (
-                                                    <SelectItem key={s.id} value={s.id.toString()}>
-                                                        <div className="flex justify-between w-full min-w-[200px]">
-                                                            <span>{s.id}. {s.nameSimple}</span>
-                                                            <span className="quran-text-small">{s.nameArabic}</span>
-                                                        </div>
-                                                    </SelectItem>
-                                                ))
-                                            )}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label htmlFor="reciter-select-trigger" className="text-sm font-medium text-muted-foreground">Select Reciter</label>
-                                    <Select
-                                        value={selectedReciterId}
-                                        onValueChange={setSelectedReciterId}
-                                    >
-                                        <SelectTrigger id="reciter-select-trigger" className="w-full h-12">
-                                            <SelectValue placeholder="Select Reciter" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {RECITERS.map((r) => (
-                                                <SelectItem key={r.id} value={r.id}>
-                                                    {r.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Most Played / History */}
-                        <div className="bg-card/50 backdrop-blur-sm border border-border p-6 rounded-2xl">
-                            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                Recently Played
-                            </h3>
-
-                            {recentSurahs.length > 0 ? (
-                                <div className="space-y-3">
-                                    {recentSurahs.map((progress: any) => {
-                                        const ch = chapters?.find((c: any) => c.id === progress.surahId);
-                                        if (!ch) return null;
-                                        return (
-                                            <button
-                                                key={progress.surahId}
-                                                onClick={() => setSelectedSurahId(progress.surahId)}
-                                                className={`w-full text-left p-3 rounded-xl transition flex items-center justify-between group ${selectedSurahId === progress.surahId ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'}`}
-                                            >
-                                                <div>
-                                                    <p className="font-bold text-sm">{ch.nameSimple}</p>
-                                                    <p className={`text-xs ${selectedSurahId === progress.surahId ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
-                                                        Last read {new Date(progress.lastReadAt).toLocaleDateString()}
-                                                    </p>
-                                                </div>
-                                                <Play className={`w-4 h-4 opacity-0 group-hover:opacity-100 transition ${selectedSurahId === progress.surahId ? 'fill-white' : 'fill-primary'}`} />
-                                            </button>
-                                        )
-                                    })}
-                                </div>
-                            ) : (
-                                <div className="text-center py-8 text-muted-foreground text-sm">
-                                    History will appear here once you start listening.
-                                </div>
-                            )}
-                        </div>
-
-                    </div>
                 </div>
             </main>
         </div>

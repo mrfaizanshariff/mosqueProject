@@ -103,12 +103,14 @@ export const VersesApi = {
             translations?: number[];
             tafsirs?: number[];
             words?: boolean;
+            fields?: string;
         }
     ) => {
         return fetchApi(`${API_BASE}/verses/by-key/${encodeURIComponent(verseKey)}`, {
             translations: options?.translations?.join(','),
             tafsirs: options?.tafsirs?.join(','),
             words: options?.words,
+            fields: options?.fields,
         });
     },
 

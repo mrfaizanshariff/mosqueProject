@@ -133,6 +133,14 @@
   text-align: right;
 }
 
+.quran-text-uthmani {
+  font-family: 'UthmanicHafs', 'Traditional Arabic', serif;
+  font-size: 2.2rem;
+  line-height: 2;
+  direction: rtl;
+  text-align: right;
+}
+
 .quran-text-small {
   font-family: 'IndoPak', 'Traditional Arabic', serif;
   font-size: 1rem;
