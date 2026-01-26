@@ -1,22 +1,28 @@
 // utils/ramadanCalculations.ts
 
-import { QuranPlan, DailyProgress, DhikrGoal } from '../types/ramadan';
+import { QuranPlan, DailyProgress, DhikrType } from '../types/ramadan';
 
+/**
+ * Calculate daily Quran reading target
+ */
 /**
  * Calculate daily Quran reading target
  */
 export function calculateDailyQuranTarget(
   completionTarget: number,
-  unit: 'pages' | 'juz',
+  unit: 'pages' | 'juz' | 'verses',
   ramadanDaysRemaining: number = 30
 ): number {
   const totalPages = 604;
   const totalJuz = 30;
-  
+  const totalVerses = 6236;
+
   if (unit === 'pages') {
     return Math.ceil((totalPages * completionTarget) / ramadanDaysRemaining);
-  } else {
+  } else if (unit === 'juz') {
     return Math.ceil((totalJuz * completionTarget) / ramadanDaysRemaining);
+  } else {
+    return Math.ceil((totalVerses * completionTarget) / ramadanDaysRemaining);
   }
 }
 
@@ -25,7 +31,10 @@ export function calculateDailyQuranTarget(
  */
 export function getTodayDate(): string {
   const today = new Date();
-  return today.toISOString().split('T')[0];
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 /**
@@ -34,10 +43,10 @@ export function getTodayDate(): string {
 export function calculateRamadanDay(startDate: string): number {
   const start = new Date(startDate);
   const today = new Date();
-  
+
   const diffTime = today.getTime() - start.getTime();
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  
+
   return Math.min(Math.max(diffDays + 1, 1), 30);
 }
 
@@ -50,28 +59,39 @@ export function calculateOverallProgress(
   ramadanDay: number
 ): number {
   if (ramadanDay === 0 || goals.length === 0) return 0;
-  
+
   let totalPossible = 0;
-  let totalCompleted = 0;
-  
-  Object.entries(dailyProgress).forEach(([date, progress]) => {
-    const habitsCount = Object.keys(progress.habits).length;
-    totalPossible += habitsCount;
-    
-    // Count completed habits
-    if (progress.habits.salah) {
-      const salahCompleted = Object.values(progress.habits.salah).filter(Boolean).length;
-      totalCompleted += salahCompleted;
-    }
-    if (progress.habits.quran?.completed) totalCompleted++;
-    if (progress.habits.taraweeh) totalCompleted++;
-    if (progress.habits.dhikr?.completed) totalCompleted++;
-    if (progress.habits.custom) {
-      totalCompleted += Object.values(progress.habits.custom).filter(Boolean).length;
+  let totalCompletedValue = 0;
+
+  // We calculate progress based on active goals across all days passed
+  goals.filter(g => g.enabled).forEach(goal => {
+    for (let i = 1; i <= ramadanDay; i++) {
+      totalPossible += 1; // Each day each goal is 1 unit
     }
   });
-  
-  return totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
+
+  Object.entries(dailyProgress).forEach(([date, progress]) => {
+    if (progress.habits.salah) {
+      if (isSalahComplete(progress.habits.salah)) totalCompletedValue += 1;
+      else {
+        // Partial salah progress? Let's say 0.2 per prayer
+        const salahCompletedCount = Object.values(progress.habits.salah).filter(Boolean).length;
+        totalCompletedValue += (salahCompletedCount / 5);
+      }
+    }
+    if (progress.habits.quran?.completed) totalCompletedValue += 1;
+    if (progress.habits.taraweeh) totalCompletedValue += 1;
+    if (progress.habits.dhikr?.completed) totalCompletedValue += 1;
+    if (progress.habits.custom) {
+      const customTotal = Object.values(progress.habits.custom).length;
+      if (customTotal > 0) {
+        const customCompleted = Object.values(progress.habits.custom).filter(Boolean).length;
+        totalCompletedValue += (customCompleted / customTotal);
+      }
+    }
+  });
+
+  return totalPossible > 0 ? Math.min(Math.round((totalCompletedValue / totalPossible) * 100), 100) : 0;
 }
 
 /**
@@ -90,12 +110,15 @@ export function recalculateQuranPlan(
   startDate: string
 ): QuranPlan {
   const daysRemaining = getDaysRemaining(startDate);
-  
+
   if (daysRemaining === 0) return currentPlan;
-  
-  const totalTarget = currentPlan.unit === 'pages' ? 604 : 30;
-  const remaining = (totalTarget * currentPlan.completionTarget) - currentPlan.totalCompleted;
-  
+
+  let totalTargetValue = 604;
+  if (currentPlan.unit === 'juz') totalTargetValue = 30;
+  else if (currentPlan.unit === 'verses') totalTargetValue = 6236;
+
+  const remaining = (totalTargetValue * currentPlan.completionTarget) - currentPlan.totalCompleted;
+
   return {
     ...currentPlan,
     dailyTarget: Math.ceil(remaining / daysRemaining)
@@ -116,7 +139,7 @@ export function isSalahComplete(salah?: any): boolean {
 export function getStreak(dailyProgress: Record<string, DailyProgress>): number {
   const sortedDates = Object.keys(dailyProgress).sort().reverse();
   let streak = 0;
-  
+
   for (const date of sortedDates) {
     const progress = dailyProgress[date];
     const hasActivity = Object.values(progress.habits).some(habit => {
@@ -126,14 +149,14 @@ export function getStreak(dailyProgress: Record<string, DailyProgress>): number 
       }
       return false;
     });
-    
+
     if (hasActivity) {
       streak++;
     } else {
       break;
     }
   }
-  
+
   return streak;
 }
 
@@ -142,10 +165,10 @@ export function getStreak(dailyProgress: Record<string, DailyProgress>): number 
  */
 export function formatRamadanDate(dateStr: string): string {
   const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', { 
-    weekday: 'long', 
-    month: 'long', 
-    day: 'numeric' 
+  return date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric'
   });
 }
 
@@ -168,9 +191,14 @@ export function getDefaultGoals() {
     },
     {
       id: 'dhikr',
-      type: {id:'allahuAkbar',dailyTarget:33,dhikrName:"Allahu Akbar"} as DhikrGoal,
+      type: 'dhikr' as const,
       name: 'Daily Dhikr',
       dailyTarget: 100,
+      dhikrTypes: [
+        { id: 'subhanallah', name: 'SubhanAllah', target: 33 },
+        { id: 'alhamdulillah', name: 'Alhamdulillah', target: 33 },
+        { id: 'allahuakbar', name: 'Allahu Akbar', target: 34 }
+      ],
       enabled: true
     },
     {

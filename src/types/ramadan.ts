@@ -1,11 +1,11 @@
 // types/ramadan.ts
 
-export type GoalType = 'salah' | 'quran' | DhikrGoal | 'taraweeh' | 'custom';
+export type GoalType = 'salah' | 'quran' | 'dhikr' | 'taraweeh' | 'custom';
 
-export interface DhikrGoal  {
-    id: string;
-    dhikrName: string;
-    dailyTarget: number;
+export interface DhikrType {
+  id: string;
+  name: string;
+  target: number;
 }
 
 export type Goal = {
@@ -13,13 +13,14 @@ export type Goal = {
   type: GoalType;
   name: string;
   dailyTarget?: number;
+  dhikrTypes?: DhikrType[];
   enabled: boolean;
   reminderEnabled?: boolean;
 };
 
 export type QuranPlan = {
   completionTarget: number; // 1x, 2x, or custom
-  unit: 'pages' | 'juz';
+  unit: 'pages' | 'juz' | 'verses';
   dailyTarget: number;
   totalCompleted: number;
   preferredTime?: 'fajr' | 'night' | 'anytime';
@@ -41,11 +42,13 @@ export type DailyProgress = {
       completed: boolean;
       pagesRead?: number;
       juzRead?: number;
+      versesRead?: number;
     };
     taraweeh?: boolean;
     dhikr?: {
       completed: boolean;
-      count: number;
+      totalCount: number;
+      counts: Record<string, number>;
     };
     custom?: Record<string, boolean>;
   };
@@ -92,29 +95,31 @@ export type RamadanActions = {
   addGoal: (goal: Goal) => void;
   removeGoal: (goalId: string) => void;
   toggleGoal: (goalId: string) => void;
-  
+  addDhikrType: (type: DhikrType) => void;
+
   // Quran
   setQuranPlan: (plan: QuranPlan) => void;
   updateQuranProgress: (date: string, pagesRead: number) => void;
   markQuranComplete: (date: string) => void;
-  
+
   // Daily habits
   toggleSalah: (date: string, prayer: keyof SalahProgress) => void;
   toggleTaraweeh: (date: string) => void;
   toggleCustomHabit: (date: string, habitId: string) => void;
-  
+
   // Dhikr
-  incrementDhikr: (date: string, count?: number) => void;
+  incrementDhikr: (date: string, dhikrTypeId: string, count?: number) => void;
   resetDhikr: (date: string) => void;
-  
+
   // Settings
   updateSettings: (settings: Partial<RamadanSettings>) => void;
-  
+
   // Utility
   completeOnboarding: () => void;
   getTodayProgress: () => DailyProgress;
   getRamadanDay: () => number;
   getOverallProgress: () => number;
+  syncQuranProgress: (ayahsRead: number) => void;
   syncToAccount: (userId: string) => Promise<void>;
   reset: () => void;
 };
