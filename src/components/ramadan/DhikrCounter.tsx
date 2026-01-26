@@ -35,20 +35,20 @@ export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
   React.useEffect(() => {
     if (configuredTypes.length > 0) {
       // If we have a pending selection and it now exists, select it
-      if (pendingSelection.current && configuredTypes.some(t => t.id === pendingSelection.current)) {
+      if (pendingSelection.current && configuredTypes.some((t: any) => t.id === pendingSelection.current)) {
         setSelectedTypeId(pendingSelection.current);
         pendingSelection.current = null;
         return;
       }
 
-      const typeExists = configuredTypes.some(t => t.id === selectedTypeId);
+      const typeExists = configuredTypes.some((t: any) => t.id === selectedTypeId);
       if (!typeExists) {
         setSelectedTypeId(configuredTypes[0].id);
       }
     }
   }, [configuredTypes, selectedTypeId]);
 
-  const selectedType = configuredTypes.find(t => t.id === selectedTypeId) || configuredTypes[0] || { id: 'unknown', name: 'Unknown', target: 100 };
+  const selectedType = configuredTypes.find((t: any) => t.id === selectedTypeId) || configuredTypes[0] || { id: 'unknown', name: 'Unknown', target: 100 };
 
   const handleIncrement = (typeId: string, amount: number = 1) => {
     incrementDhikr(today, typeId, amount);
