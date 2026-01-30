@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRamadanStore } from '../../store/ramadanStore';
 import { Check, Plus, X, ArrowLeft, Settings2, Target } from 'lucide-react';
-import { Goal, DhikrType } from '../../types/ramadan';
+import { Goal, DhikrType, GoalType } from '../../types/ramadan';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const PRESET_DHIKR: DhikrType[] = [
@@ -39,49 +39,49 @@ export default function GoalSelector() {
   };
 
   const handleToggleDhikrType = (type: DhikrType) => {
-    const dhikrGoal = goals.find(g => g.type === 'dhikr');
+    const dhikrGoal = goals.find((g: any) => g.type === 'dhikr');
     if (!dhikrGoal) return;
 
     const currentTypes = dhikrGoal.dhikrTypes || [];
-    const exists = currentTypes.find(t => t.id === type.id);
+    const exists = currentTypes.find((t: any) => t.id === type.id);
 
-    let newTypes;
+    let newTypes: DhikrType[];
     if (exists) {
-      newTypes = currentTypes.filter(t => t.id !== type.id);
+      newTypes = currentTypes.filter((t: any) => t.id !== type.id);
     } else {
       newTypes = [...currentTypes, type];
     }
 
-    const newGoals = goals.map(g =>
+    const newGoals = goals.map((g: any) =>
       g.type === 'dhikr' ? {
         ...g,
         dhikrTypes: newTypes,
-        dailyTarget: newTypes.reduce((acc, t) => acc + t.target, 0)
+        dailyTarget: newTypes.reduce((acc: any, t: any) => acc + t.target, 0)
       } : g
     );
     setGoals(newGoals);
   };
 
   const handleUpdateDhikrTarget = (id: string, target: number) => {
-    const dhikrGoal = goals.find(g => g.type === 'dhikr');
+    const dhikrGoal = goals.find((g: any) => g.type === 'dhikr');
     if (!dhikrGoal) return;
 
-    const newTypes = (dhikrGoal.dhikrTypes || []).map(t =>
+    const newTypes = (dhikrGoal.dhikrTypes || []).map((t: any) =>
       t.id === id ? { ...t, target } : t
     );
 
-    const newGoals = goals.map(g =>
+    const newGoals = goals.map((g: any) =>
       g.type === 'dhikr' ? {
         ...g,
         dhikrTypes: newTypes,
-        dailyTarget: newTypes.reduce((acc, t) => acc + t.target, 0)
+        dailyTarget: newTypes.reduce((acc: any, t: any) => acc + t.target, 0)
       } : g
     );
     setGoals(newGoals);
   };
 
   const handleContinue = () => {
-    const hasQuranGoal = goals.find(g => g.type === 'quran' && g.enabled);
+    const hasQuranGoal = goals.find((g: any) => g.type === 'quran' && g.enabled);
     if (hasQuranGoal) {
       router.push('/ramadan/setup/quran');
     } else {
@@ -89,8 +89,8 @@ export default function GoalSelector() {
     }
   };
 
-  const getGoalIcon = (type: string) => {
-    const icons: Record<string, string> = {
+  const getGoalIcon = (type: GoalType) => {
+    const icons: Record<GoalType, string> = {
       salah: '🤲',
       quran: '📖',
       dhikr: '📿',
@@ -119,7 +119,7 @@ export default function GoalSelector() {
         </div>
 
         <div className="grid gap-4">
-          {goals.map((goal) => (
+          {goals.map((goal: any) => (
             <div key={goal.id} className="space-y-3">
               <motion.div
                 layout
@@ -181,8 +181,8 @@ export default function GoalSelector() {
                       </h4>
                     </div>
                     <div className="grid gap-3">
-                      {PRESET_DHIKR.map((preset) => {
-                        const isSelected = goal.dhikrTypes?.some(t => t.id === preset.id);
+                      {PRESET_DHIKR.map((preset: any) => {
+                        const isSelected = goal.dhikrTypes?.some((t: any) => t.id === preset.id);
                         return (
                           <div key={preset.id} className="flex items-center gap-3 bg-card p-3 rounded-xl border border-border shadow-sm">
                             <button
@@ -196,8 +196,8 @@ export default function GoalSelector() {
                                 <span className="text-xs text-muted-foreground">Target:</span>
                                 <input
                                   type="number"
-                                  value={goal.dhikrTypes?.find(t => t.id === preset.id)?.target}
-                                  onChange={(e) => handleUpdateDhikrTarget(preset.id, parseInt(e.target.value) || 0)}
+                                  value={goal.dhikrTypes?.find((t: any) => t.id === preset.id)?.target || 0}
+                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleUpdateDhikrTarget(preset.id, parseInt(e.target.value) || 0)}
                                   className="w-16 px-2 py-1 bg-background border border-border rounded-lg text-sm text-center focus:ring-1 focus:ring-primary"
                                 />
                               </div>
@@ -214,15 +214,15 @@ export default function GoalSelector() {
                       })}
 
                       {/* User-defined dhikr types */}
-                      {goal.dhikrTypes?.filter(t => !PRESET_DHIKR.some(p => p.id === t.id)).map((custom) => (
+                      {goal.dhikrTypes?.filter((t: any) => !PRESET_DHIKR.some((p: any) => p.id === t.id)).map((custom: any) => (
                         <div key={custom.id} className="flex items-center gap-3 bg-card p-3 rounded-xl border border-primary/30 shadow-sm">
                           <span className="flex-grow font-medium text-primary">{custom.name}</span>
                           <div className="flex items-center gap-2">
                             <span className="text-xs text-muted-foreground">Target:</span>
                             <input
                               type="number"
-                              value={custom.target}
-                              onChange={(e) => handleUpdateDhikrTarget(custom.id, parseInt(e.target.value) || 0)}
+                              value={custom.target || 0}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleUpdateDhikrTarget(custom.id, parseInt(e.target.value) || 0)}
                               className="w-16 px-2 py-1 bg-background border border-border rounded-lg text-sm text-center focus:ring-1 focus:ring-primary"
                             />
                           </div>
@@ -303,7 +303,7 @@ export default function GoalSelector() {
         <div className="pt-8">
           <button
             onClick={handleContinue}
-            disabled={!goals.some(g => g.enabled)}
+            disabled={!goals.some((g: any) => g.enabled)}
             className="w-full bg-primary text-primary-foreground py-5 rounded-2xl font-bold text-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next: Configure Details

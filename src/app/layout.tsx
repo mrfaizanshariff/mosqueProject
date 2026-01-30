@@ -7,7 +7,6 @@ import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { CityProvider } from '../context/CityContext';
 import { PrayerTimingsProvider } from '../context/PrayerTimingsContext';
 import { Analytics } from "@vercel/analytics/next"
-import Script from 'next/script';
 const amiri = Amiri({
   subsets: ['arabic'],
   weight: ['400', '700'],
@@ -50,23 +49,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-KE3WBEBM1G"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+             window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-KE3WBEBM1G');
+            `
+          }}
+        />
+      </head>
 
       <body className={`${amiri.variable} ${notoSans.variable} font-sans`}>
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-KE3WBEBM1G"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-        >
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-KE3WBEBM1G');
-          `}
-        </Script>
 
         <ThemeProvider
           attribute="class"
