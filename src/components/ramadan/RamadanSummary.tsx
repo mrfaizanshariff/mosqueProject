@@ -15,7 +15,7 @@ export default function RamadanSummary() {
   // Calculate stats
   const totalDays = Object.keys(dailyProgress).length;
   const streak = getStreak(dailyProgress);
-  
+
   let totalQuranPages = 0;
   let salahConsistency = 0;
   let totalDhikr = 0;
@@ -28,8 +28,8 @@ export default function RamadanSummary() {
     if (day.habits.salah && isSalahComplete(day.habits.salah)) {
       salahConsistency++;
     }
-    if (day.habits.dhikr?.count) {
-      totalDhikr += day.habits.dhikr.count;
+    if (day.habits.dhikr?.totalCount) {
+      totalDhikr += day.habits.dhikr.totalCount;
     }
     if (day.habits.taraweeh) {
       taraweehCount++;
@@ -190,7 +190,7 @@ Generated from Mosque of India - Ramadan Companion
           </button>
 
           <button
-            onClick={() => {/* Navigate to continue habits */}}
+            onClick={() => {/* Navigate to continue habits */ }}
             className="w-full border-2 border-primary text-primary px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary/5 transition"
           >
             Continue These Habits
