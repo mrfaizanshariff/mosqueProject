@@ -9,9 +9,12 @@ import { SearchService } from '@/lib/quran/services';
 import { Language } from '@quranjs/api';
 
 export async function GET(request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;
+    const query = searchParams.get('q') || searchParams.get('query');
+    const language = searchParams.get('language') as Language | null;
+    const size = searchParams.get('size');
+    const page = searchParams.get('page');
     try {
-        const searchParams = request.nextUrl.searchParams;
-        const query = searchParams.get('q') || searchParams.get('query');
 
         if (!query || query.trim() === '') {
             return NextResponse.json(
@@ -23,9 +26,6 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        const language = searchParams.get('language') as Language | null;
-        const size = searchParams.get('size');
-        const page = searchParams.get('page');
 
         const results = await SearchService.search(query, {
             language: language || undefined,

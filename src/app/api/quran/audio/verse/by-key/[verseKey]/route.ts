@@ -12,6 +12,8 @@ export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ verseKey: string }> }
 ) {
+    const searchParams = request.nextUrl.searchParams;
+    const reciterId = searchParams.get('reciterId') || '7';
     try {
         const { verseKey: verseKeyParam } = await params;
         const verseKey = decodeURIComponent(verseKeyParam) as VerseKey;
@@ -28,8 +30,6 @@ export async function GET(
             );
         }
 
-        const searchParams = request.nextUrl.searchParams;
-        const reciterId = searchParams.get('reciterId') || '7';
 
         const audio = await AudioService.getVerseRecitationByKey(verseKey, reciterId);
 
