@@ -7,6 +7,8 @@ import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { CityProvider } from '../context/CityContext';
 import { PrayerTimingsProvider } from '../context/PrayerTimingsContext';
 import { Analytics } from "@vercel/analytics/next"
+import { GoogleAnalytics } from '@next/third-parties/google'
+
 const amiri = Amiri({
   subsets: ['arabic'],
   weight: ['400', '700'],
@@ -49,7 +51,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
+        <meta name="theme-color" content="#000000" />
+        <GoogleAnalytics gaId="G-KE3WBEBM1G" />
+      </head>
+
       <body className={`${amiri.variable} ${notoSans.variable} font-sans`}>
+
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

@@ -9,9 +9,9 @@ import { ChapterService } from '@/lib/quran/services';
 import { Language } from '@quranjs/api';
 
 export async function GET(request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;
+    const language = searchParams.get('language') as Language | null;
     try {
-        const searchParams = request.nextUrl.searchParams;
-        const language = searchParams.get('language') as Language | null;
 
         const chapters = await ChapterService.getAll({
             language: language || undefined,

@@ -11,7 +11,7 @@ import { DailyProgress } from '../../types/ramadan';
 export default function RamadanCalendar() {
   const { dailyProgress, settings, getRamadanDay } = useRamadanStore();
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
-  
+
   const today = getTodayDate();
   const currentRamadanDay = getRamadanDay();
 
@@ -33,7 +33,7 @@ export default function RamadanCalendar() {
     if (!progress) return 'none';
 
     const habits = progress.habits;
-    const hasActivity = 
+    const hasActivity =
       habits.salah ||
       habits.quran?.completed ||
       habits.taraweeh ||
@@ -74,23 +74,20 @@ export default function RamadanCalendar() {
 
             {ramadanDays.map((day) => {
               const status = getDayStatus(day.date);
-              
+
               return (
                 <button
                   key={day.dayNumber}
                   onClick={() => setSelectedDay(day.date)}
                   disabled={day.isFuture}
-                  className={`aspect-square p-2 rounded-lg border-2 transition ${
-                    day.isToday
+                  className={`aspect-square p-2 rounded-lg border-2 transition ${day.isToday
                       ? 'border-primary bg-primary/10'
                       : status === 'active'
-                      ? 'border-primary/50 bg-primary/5'
-                      : 'border-border hover:border-muted'
-                  } ${
-                    day.isFuture ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                  } ${
-                    selectedDay === day.date ? 'ring-2 ring-primary' : ''
-                  }`}
+                        ? 'border-primary/50 bg-primary/5'
+                        : 'border-border hover:border-muted'
+                    } ${day.isFuture ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                    } ${selectedDay === day.date ? 'ring-2 ring-primary' : ''
+                    }`}
                 >
                   <div className="flex flex-col items-center justify-center h-full">
                     <span className="text-lg font-bold">{day.dayNumber}</span>
@@ -146,11 +143,10 @@ export default function RamadanCalendar() {
                     {Object.entries(selectedDayProgress.habits.salah).map(([prayer, completed]) => (
                       <div
                         key={prayer}
-                        className={`p-2 rounded text-center text-xs ${
-                          completed
+                        className={`p-2 rounded text-center text-xs ${completed
                             ? 'bg-primary/10 text-primary border border-primary/20'
                             : 'bg-muted text-muted-foreground'
-                        }`}
+                          }`}
                       >
                         {prayer.charAt(0).toUpperCase() + prayer.slice(1)}
                       </div>
@@ -180,7 +176,7 @@ export default function RamadanCalendar() {
                 <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg">
                   <CheckCircle2 className="w-5 h-5 text-primary" />
                   <span className="font-medium">
-                    Dhikr: {selectedDayProgress.habits.dhikr.count} times
+                    Dhikr: {selectedDayProgress.habits.dhikr.totalCount} times
                   </span>
                 </div>
               )}

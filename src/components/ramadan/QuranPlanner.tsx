@@ -71,7 +71,7 @@ export default function QuranPlanner() {
             </div>
 
             <div className="grid grid-cols-3 gap-3">
-              {[1, 2, 3].map((target) => (
+              {[1, 2, 3].map((target: any) => (
                 <button
                   key={target}
                   onClick={() => { setCompletionTarget(target); setShowCustom(false); }}
@@ -125,7 +125,7 @@ export default function QuranPlanner() {
                 { id: 'juz', label: 'Juz', sub: '30 total', icon: Layers },
                 { id: 'pages', label: 'Pages', sub: '604 total', icon: FileText },
                 { id: 'verses', label: 'Ayahs', sub: '6k+ total', icon: Hash }
-              ].map((item) => (
+              ].map((item: any) => (
                 <button
                   key={item.id}
                   onClick={() => setUnit(item.id as any)}
@@ -154,7 +154,7 @@ export default function QuranPlanner() {
                 { value: 'fajr', label: 'After Fajr', icon: '🌅' },
                 { value: 'night', label: 'Night/Taraweeh', icon: '🌙' },
                 { value: 'anytime', label: 'Throughout Day', icon: '⏰' }
-              ].map((option) => (
+              ].map((option: any) => (
                 <button
                   key={option.value}
                   onClick={() => setPreferredTime(option.value as any)}

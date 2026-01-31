@@ -20,7 +20,7 @@ export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
   const todayProgress = dailyProgress[today] || { date: today, habits: {} };
   const dhikrProgress = todayProgress.habits.dhikr || { completed: false, totalCount: 0, counts: {} };
 
-  const dhikrGoal = goals.find(g => (g.type as string) === 'dhikr');
+  const dhikrGoal = goals.find((g: any) => (g.type as string) === 'dhikr');
   const configuredTypes = dhikrGoal?.dhikrTypes || [
     { id: 'subhanallah', name: 'SubhanAllah', target: 33 },
     { id: 'alhamdulillah', name: 'Alhamdulillah', target: 33 },
@@ -35,20 +35,20 @@ export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
   React.useEffect(() => {
     if (configuredTypes.length > 0) {
       // If we have a pending selection and it now exists, select it
-      if (pendingSelection.current && configuredTypes.some(t => t.id === pendingSelection.current)) {
+      if (pendingSelection.current && configuredTypes.some((t: any) => t.id === pendingSelection.current)) {
         setSelectedTypeId(pendingSelection.current);
         pendingSelection.current = null;
         return;
       }
 
-      const typeExists = configuredTypes.some(t => t.id === selectedTypeId);
+      const typeExists = configuredTypes.some((t: any) => t.id === selectedTypeId);
       if (!typeExists) {
         setSelectedTypeId(configuredTypes[0].id);
       }
     }
   }, [configuredTypes, selectedTypeId]);
 
-  const selectedType = configuredTypes.find(t => t.id === selectedTypeId) || configuredTypes[0] || { id: 'unknown', name: 'Unknown', target: 100 };
+  const selectedType = configuredTypes.find((t: any) => t.id === selectedTypeId) || configuredTypes[0] || { id: 'unknown', name: 'Unknown', target: 100 };
 
   const handleIncrement = (typeId: string, amount: number = 1) => {
     incrementDhikr(today, typeId, amount);
@@ -70,7 +70,7 @@ export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-1 gap-2">
-          {configuredTypes.map((type) => {
+          {configuredTypes.map((type: any) => {
             const count = dhikrProgress.counts[type.id] || 0;
             const typeProgress = Math.min((count / type.target) * 100, 100);
             return (
@@ -113,7 +113,7 @@ export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
 
         {/* Type Selector */}
         <div className="flex gap-2 overflow-x-auto pb-4 no-scrollbar items-center">
-          {configuredTypes.map((type) => (
+          {configuredTypes.map((type: any) => (
             <button
               key={type.id}
               onClick={() => setSelectedTypeId(type.id)}
@@ -204,7 +204,7 @@ export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
 
             {/* Sub-counters Summary */}
             <div className="w-full grid grid-cols-2 gap-4">
-              {configuredTypes.map((type) => (
+              {configuredTypes.map((type: any) => (
                 <div key={type.id} className={`p-4 rounded-3xl border-2 transition-all ${selectedTypeId === type.id ? 'border-primary bg-primary/5' : 'border-border'}`}>
                   <div className="text-xs font-bold text-muted-foreground mb-1 uppercase tracking-tighter truncate">{type.name}</div>
                   <div className="text-2xl font-black">{dhikrProgress.counts[type.id] || 0}</div>
@@ -216,7 +216,7 @@ export default function DhikrCounter({ compact = false }: DhikrCounterProps) {
 
         {/* Action Controls */}
         <div className="grid grid-cols-4 gap-3">
-          {[10, 33, 100].map((amount) => (
+          {[10, 33, 100].map((amount: any) => (
             <button
               key={amount}
               onClick={() => handleIncrement(selectedTypeId, amount)}

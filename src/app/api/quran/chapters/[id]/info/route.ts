@@ -12,6 +12,8 @@ export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const searchParams = request.nextUrl.searchParams;
+    const language = searchParams.get('language') as Language | null;
     try {
         const { id } = await params;
         const parsedId = parseInt(id, 10);
@@ -28,8 +30,7 @@ export async function GET(
 
         const chapterId = parsedId as ChapterId;
 
-        const searchParams = request.nextUrl.searchParams;
-        const language = searchParams.get('language') as Language | null;
+
 
         const chapterInfo = await ChapterService.getInfo(chapterId, {
             language: language || undefined,

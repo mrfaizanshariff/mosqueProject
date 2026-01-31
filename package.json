@@ -10,9 +10,10 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.873.0",
-    "@ducanh2912/next-pwa": "^10.2.9",
+    "@ducanh2912/next-pwa": "^9.1.4",
     "@hookform/resolvers": "^5.1.1",
     "@next/swc-wasm-nodejs": "13.5.1",
+    "@next/third-parties": "^16.1.6",
     "@quranjs/api": "2.1.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",

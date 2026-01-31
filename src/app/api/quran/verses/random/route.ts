@@ -8,9 +8,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { VerseService } from '@/lib/quran/services';
 
 export async function GET(request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;
+    const translations = searchParams.get('translations');
     try {
-        const searchParams = request.nextUrl.searchParams;
-        const translations = searchParams.get('translations');
 
         const verse = await VerseService.getRandom({
             translations: translations ? translations.split(',').map(Number) : undefined,

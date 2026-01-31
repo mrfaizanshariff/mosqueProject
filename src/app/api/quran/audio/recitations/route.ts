@@ -8,9 +8,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AudioService } from '@/lib/quran/services';
 
 export async function GET(request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;
+    const reciterId = searchParams.get('reciterId') || '7';
     try {
-        const searchParams = request.nextUrl.searchParams;
-        const reciterId = searchParams.get('reciterId') || '7';
 
         const recitations = await AudioService.getAllChapterRecitations(reciterId);
 

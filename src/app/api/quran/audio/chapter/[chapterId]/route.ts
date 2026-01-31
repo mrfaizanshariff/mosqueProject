@@ -12,6 +12,9 @@ export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ chapterId: string }> }
 ) {
+    const searchParams = request.nextUrl.searchParams;
+    const reciterId = searchParams.get('reciterId') || '7';
+    const segments = searchParams.get('segments') === 'true';
     try {
         const { chapterId: chapterIdStr } = await params;
         const parsedId = parseInt(chapterIdStr, 10);
@@ -28,9 +31,6 @@ export async function GET(
 
         const chapterId = parsedId as ChapterId;
 
-        const searchParams = request.nextUrl.searchParams;
-        const reciterId = searchParams.get('reciterId') || '7';
-        const segments = searchParams.get('segments') === 'true';
 
         const audio = await AudioService.getChapterRecitation(chapterId, reciterId, {
             segments,

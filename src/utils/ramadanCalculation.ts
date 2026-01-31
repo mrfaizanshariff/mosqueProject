@@ -1,6 +1,6 @@
 // utils/ramadanCalculations.ts
 
-import { QuranPlan, DailyProgress, DhikrType } from '../types/ramadan';
+import { QuranPlan, DailyProgress, DhikrType, Goal, SalahProgress } from '../types/ramadan';
 
 /**
  * Calculate daily Quran reading target
@@ -55,7 +55,7 @@ export function calculateRamadanDay(startDate: string): number {
  */
 export function calculateOverallProgress(
   dailyProgress: Record<string, DailyProgress>,
-  goals: any[],
+  goals: Goal[],
   ramadanDay: number
 ): number {
   if (ramadanDay === 0 || goals.length === 0) return 0;
@@ -128,7 +128,7 @@ export function recalculateQuranPlan(
 /**
  * Check if all Salah prayers are completed
  */
-export function isSalahComplete(salah?: any): boolean {
+export function isSalahComplete(salah?: SalahProgress): boolean {
   if (!salah) return false;
   return salah.fajr && salah.zuhr && salah.asr && salah.maghrib && salah.isha;
 }
