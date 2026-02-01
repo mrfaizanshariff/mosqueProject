@@ -56,6 +56,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
         <meta name="theme-color" content="#000000" />
+        <meta name="google-site-verification" content="zZTHjMurEYcxkA0CRgrmlBhJKiluHvQLUZIQ97dFXm0" />
       </head>
       <body className={`${amiri.variable} ${notoSans.variable} font-sans`}>
         <GoogleAnalytics gaId="G-KE3WBEBM1G" />
