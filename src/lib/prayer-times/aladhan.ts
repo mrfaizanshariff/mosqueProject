@@ -8,6 +8,34 @@ const ALADHAN_API_URL = process.env.NEXT_PUBLIC_ALADHAN_API_URL || 'https://api.
 // Method 3 = Muslim World League (alternative)
 const CALCULATION_METHOD = 1;
 
+// Delay function for rate limiting
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Retry with exponential backoff
+async function fetchWithRetry(url: string, retries = 3, delayMs = 1000): Promise<Response> {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url, {
+                next: { revalidate: 3600 }, // Revalidate every hour
+            });
+
+            if (response.status === 429) {
+                // Rate limited - wait and retry
+                const waitTime = delayMs * Math.pow(2, i); // Exponential backoff
+                console.log(`Rate limited. Waiting ${waitTime}ms before retry ${i + 1}/${retries}`);
+                await delay(waitTime);
+                continue;
+            }
+
+            return response;
+        } catch (error) {
+            if (i === retries - 1) throw error;
+            await delay(delayMs * Math.pow(2, i));
+        }
+    }
+    throw new Error('Max retries reached');
+}
+
 export async function getPrayerTimesByCity(city: City, date?: Date): Promise<PrayerTimes> {
     const targetDate = date || new Date();
     const timestamp = Math.floor(targetDate.getTime() / 1000);
@@ -15,9 +43,12 @@ export async function getPrayerTimesByCity(city: City, date?: Date): Promise<Pra
     try {
         const url = `${ALADHAN_API_URL}/timings/${timestamp}?latitude=${city.latitude}&longitude=${city.longitude}&method=${CALCULATION_METHOD}&school=1`;
 
-        const response = await fetch(url, {
-            next: { revalidate: 3600 }, // Revalidate every hour
-        });
+        // Add a small delay to avoid hitting rate limits during build
+        if (process.env.NODE_ENV === 'production') {
+            await delay(500);
+        }
+
+        const response = await fetchWithRetry(url);
 
         if (!response.ok) {
             throw new Error(`Aladhan API error: ${response.statusText}`);

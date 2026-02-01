@@ -10,9 +10,13 @@ interface PageProps {
     params: Promise<{ city: string }>;
 }
 
+export const dynamicParams = true; // Allow dynamic generation for non-prerendered cities
+
 export async function generateStaticParams() {
-    const slugs = getAllCitySlugs();
-    return slugs.map((slug) => ({ city: slug }));
+    // Only pre-render the most popular cities to avoid rate limiting
+    // Other cities will be generated on-demand (ISR)
+    const popularCities = ['delhi', 'mumbai', 'bangalore', 'hyderabad', 'kolkata'];
+    return popularCities.map((slug) => ({ city: slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
