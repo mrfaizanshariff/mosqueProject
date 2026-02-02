@@ -37,44 +37,20 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: [
-              "default-src 'self';", // Fallback: Only allow same-origin by default
-              "style-src 'self' https://fonts.googleapis.com;", // Allow Google Fonts CSS
-              "font-src 'self' https://fonts.gstatic.com;", // Allow font files
-              "script-src 'self' https://www.googletagmanager.com;", // Allow GTM JS
-              "connect-src 'self' https://www.google-analytics.com https://api.aladhan.com;", // Allow Analytics beacons and Aladhan API
-              // Add more if needed (e.g., img-src for GTM debug: img-src 'self' data: https://ssl.gstatic.com;)
-              // If you use nonces for inline scripts/styles: "script-src 'self' 'nonce-{RANDOM_NONCE}' 'strict-dynamic';"
+              "default-src 'self';",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://va.vercel-scripts.com;",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;",
+              "img-src 'self' data: https:;",
+              "font-src 'self' https://fonts.gstatic.com https://verses.quran.foundation https://static-cdn.tarteel.ai;",
+              "connect-src 'self' https://www.google-analytics.com https://api.aladhan.com https://*.firebaseio.com https://*.googleapis.com https://va.vercel-scripts.com;",
+              "frame-src 'self' https://*.firebaseapp.com;",
             ].join(' '),
           }
         ],
-      },
-      {
-        source: '/sw.js',
-        headers: [
-          {
-            key: 'Content-Type',
-            value: 'application/javascript; charset=utf-8',
-          },
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self';", // Fallback: Only allow same-origin by default
-              "style-src 'self' https://fonts.googleapis.com;", // Allow Google Fonts CSS
-              "font-src 'self' https://fonts.gstatic.com;", // Allow font files
-              "script-src 'self' https://www.googletagmanager.com;", // Allow GTM JS
-              "connect-src 'self' https://www.google-analytics.com https://api.aladhan.com;", // Allow Analytics beacons and Aladhan API
-              // Add more if needed (e.g., img-src for GTM debug: img-src 'self' data: https://ssl.gstatic.com;)
-              // If you use nonces for inline scripts/styles: "script-src 'self' 'nonce-{RANDOM_NONCE}' 'strict-dynamic';"
-            ].join(' '),
-          },
-        ],
-      },
+      }
     ]
   }
 };
 
-module.exports = withPWA(nextConfig);
+// module.exports = withPWA(nextConfig);
+module.exports = nextConfig
