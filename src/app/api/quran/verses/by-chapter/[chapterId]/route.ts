@@ -57,6 +57,7 @@ export async function GET(
             translations: translations ? translations.split(',').map(Number) : undefined,
             words: words !== null ? words === 'true' : undefined,
             wordFields: Object.values(wordFields).some(Boolean) ? wordFields : undefined,
+            word_fields: 'text_indopak',
             fields: Object.values(fields).some(Boolean) ? fields : undefined,
         });
 

@@ -7,9 +7,11 @@ import { useRouter } from 'next/navigation';
 import { Moon, Heart, BookOpen, Star, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRamadanStore } from '../../store/ramadanStore';
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
 
 export default function RamadanIntro() {
   const router = useRouter();
+  const { user, loading: authLoading, signInAnon, signInWithGoogle } = useFirebaseAuth();
   const { onboardingComplete, userMode, setUserMode } = useRamadanStore();
   const [isRedirecting, setIsRedirecting] = useState(true);
 
@@ -23,6 +25,7 @@ export default function RamadanIntro() {
   }, [onboardingComplete, router]);
 
   const handleStart = (mode: 'guest' | 'loggedIn') => {
+    mode === 'loggedIn' ? signInWithGoogle() : signInAnon()
     setUserMode(mode);
     router.push('/ramadan/setup');
   };

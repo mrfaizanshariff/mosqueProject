@@ -91,6 +91,7 @@ export const VersesApi = {
             perPage: options?.perPage,
             translations: options?.translations?.join(','),
             words: options?.words,
+            word_fields: 'text_indopak',
         });
     },
 
@@ -111,6 +112,7 @@ export const VersesApi = {
             tafsirs: options?.tafsirs?.join(','),
             words: options?.words,
             fields: options?.fields,
+            word_fields: 'text_indopak',
         });
     },
 

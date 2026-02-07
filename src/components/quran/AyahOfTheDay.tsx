@@ -38,7 +38,7 @@ export default function AyahOfTheDay() {
   const { data: verse, loading } = useVerse(verseKey, {
     translations: [TRANSLATION_IDS.SAHIH_INTERNATIONAL],
     words: true,
-    fields: 'textIndopak'
+    fields: 'text_indopak'
   });
 
   if (loading || !verse) {
@@ -72,8 +72,8 @@ export default function AyahOfTheDay() {
         <div className="mb-6 text-right" dir="rtl">
           <p className="text-3xl md:text-4xl leading-loose text-foreground ">
             {actualWords.map((word: any) => (
-              <span key={word.id} className="mx-1 quran-text-uthmani">
-                {word.text || word.textUthmani}
+              <span key={word.id} className="quran-text">
+                {word.textIndopak}
               </span>
             ))}
           </p>

@@ -52,7 +52,7 @@ export class ChapterService {
   /**
    * Get chapter by ID
    */
-  static async getById(id: ChapterId, options?: { language?: Language, fields?: string }) {
+  static async getById(id: ChapterId, options?: { language?: Language, word_fields?: string }) {
     const cacheKey = `chapter:${id}:${options?.language || 'default'}`;
     const cached = this.cache.get(cacheKey);
 
@@ -121,6 +121,7 @@ export class VerseService {
         translation?: boolean;
         audio?: boolean;
       };
+      word_fields?: string,
       fields?: {
         textUthmani?: boolean;
         textUthmaniTajweed?: boolean;
@@ -169,6 +170,7 @@ export class VerseService {
         words: options?.words ?? true,
         wordFields: {
           textUthmani: true,
+          textIndopak: true
         },
       });
     } catch (error) {

@@ -33,7 +33,7 @@ export async function GET(
 
         const chapter = await ChapterService.getById(chapterId, {
             language: language || undefined,
-            fields: 'text_indopak'
+            word_fields: 'text_indopak'
         });
 
         return NextResponse.json({
