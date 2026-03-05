@@ -66,7 +66,7 @@ const VerseItem = React.memo(({ verse, isActive, activeWordPosition, setVerseRef
         {verse.words
           ?.filter((word: any) => word.charTypeName === 'word')
           ?.map((word: any) => (
-            <span key={word.id} className="mr-2">
+            <span key={word.id} className="mr-2 inline-block">
               {word.transliteration?.text}
             </span>
           ))}
