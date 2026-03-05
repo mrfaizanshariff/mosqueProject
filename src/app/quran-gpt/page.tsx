@@ -33,6 +33,7 @@ export default function QuranGPTPage() {
     useEffect(() => {
         if (user && conversations.length > 0 && !activeConversationId) {
             setActiveConversationId(conversations[0].id);
+            console.log(conversations);
         }
     }, [user, conversations, activeConversationId]);
 
@@ -121,13 +122,13 @@ export default function QuranGPTPage() {
                             Continue with Google
                         </button>
 
-                        <button
+                        {/* <button
                             onClick={signInAnon}
                             className="w-full bg-primary text-primary-foreground px-6 py-4 rounded-xl font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
                         >
                             <LogIn className="w-5 h-5" />
                             Continue as Guest
-                        </button>
+                        </button> */}
                     </div>
 
                     <p className="text-sm text-muted-foreground pt-4">

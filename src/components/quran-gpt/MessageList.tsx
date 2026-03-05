@@ -19,7 +19,7 @@ export default function MessageList({ messages, isStreaming }: MessageListProps)
     };
 
     useEffect(() => {
-        scrollToBottom();
+        // scrollToBottom();
     }, [messages, isStreaming]);
 
     if (messages.length === 0 && !isStreaming) {
@@ -63,7 +63,7 @@ export default function MessageList({ messages, isStreaming }: MessageListProps)
                         </div>
                         <div className="flex-1">
                             <span className="font-semibold text-sm">Quran GPT</span>
-                            <p className="text-muted-foreground text-sm mt-1">Thinking...</p>
+                            <p className="text-muted-foreground text-sm mt-1">Gathering Resources from Sunnah.com and Quran.com...</p>
                         </div>
                     </div>
                 )}

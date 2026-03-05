@@ -121,7 +121,7 @@ export const addMessage = async (
         await updateDoc(
             doc(db, 'users', userId, 'conversations', conversationId),
             {
-                lastMessage: content.substring(0, 100),
+                lastMessage: content.substring(100, 200),
                 updatedAt: serverTimestamp(),
             }
         );

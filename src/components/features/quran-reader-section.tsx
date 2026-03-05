@@ -51,7 +51,7 @@ const VerseItem = React.memo(({ verse, isActive, activeWordPosition, setVerseRef
             <span
               key={word.id}
               className={`quran-text inline-block mx-1.5 transition-all duration-200 rounded px-1 ${isCurrentWord
-                ? 'text-primary font-bold shadow-sm'
+                ? 'text-primary'
                 : 'hover:text-primary/80'
                 }`}
             >

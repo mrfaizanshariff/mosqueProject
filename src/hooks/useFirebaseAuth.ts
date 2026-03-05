@@ -34,6 +34,7 @@ export const useFirebaseAuth = () => {
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to sign in');
             console.error('Anonymous sign-in error:', err);
+            throw err;
         } finally {
             setLoading(false);
         }
@@ -48,6 +49,7 @@ export const useFirebaseAuth = () => {
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to sign in with Google');
             console.error('Google sign-in error:', err);
+            throw err;
         } finally {
             setLoading(false);
         }

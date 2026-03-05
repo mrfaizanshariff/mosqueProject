@@ -46,7 +46,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;",
               "img-src 'self' data: https: https://*.googleusercontent.com;",
               "font-src 'self' https://fonts.gstatic.com https://verses.quran.foundation https://static-cdn.tarteel.ai;",
-              "connect-src 'self' https://www.google-analytics.com https://api.aladhan.com https://*.firebaseio.com https://*.googleapis.com https://va.vercel-scripts.com https://*.firebaseapp.com;",
+              "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://api.aladhan.com https://*.firebaseio.com https://*.googleapis.com https://*.googleusercontent.com https://va.vercel-scripts.com https://*.firebaseapp.com;",
               "frame-src 'self' https://*.firebaseapp.com https://accounts.google.com;",
               "media-src 'self' https://download.quranicaudio.com https://*.quranicaudio.com;",
             ].join(' '),

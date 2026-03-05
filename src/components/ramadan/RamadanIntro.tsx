@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Moon, Heart, BookOpen, Star, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { Moon, Heart, BookOpen, Star, ArrowRight, ShieldCheck, Zap, AlertCircle, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRamadanStore } from '../../store/ramadanStore';
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
@@ -14,20 +14,42 @@ export default function RamadanIntro() {
   const { user, loading: authLoading, signInAnon, signInWithGoogle } = useFirebaseAuth();
   const { onboardingComplete, userMode, setUserMode } = useRamadanStore();
   const [isRedirecting, setIsRedirecting] = useState(true);
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
-  // Check for auto-redirect
+  // Check for auto-redirect — wait for auth to settle first
   useEffect(() => {
-    if (onboardingComplete) {
-      router.push('/ramadan/dashboard');
-    } else {
-      setIsRedirecting(false);
-    }
-  }, [onboardingComplete, router]);
+    if (authLoading) return; // wait until Firebase resolves auth state
 
-  const handleStart = (mode: 'guest' | 'loggedIn') => {
-    mode === 'loggedIn' ? signInWithGoogle() : signInAnon()
-    setUserMode(mode);
-    router.push('/ramadan/setup');
+    if (onboardingComplete) {
+      // Guest users or authenticated users can go to dashboard
+      if (userMode === 'guest' || user) {
+        router.push('/ramadan/dashboard');
+        return;
+      }
+    }
+    setIsRedirecting(false);
+  }, [onboardingComplete, authLoading, user, userMode, router]);
+
+  const handleStart = async (mode: 'guest' | 'loggedIn') => {
+    setAuthError(null);
+    setIsSigningIn(true);
+
+    try {
+      if (mode === 'loggedIn') {
+        await signInWithGoogle();
+      } else {
+        await signInAnon();
+      }
+      setUserMode(mode);
+      router.push('/ramadan/setup');
+    } catch (err) {
+      setAuthError(
+        err instanceof Error ? err.message : 'Sign-in failed. Please try again.'
+      );
+    } finally {
+      setIsSigningIn(false);
+    }
   };
 
   if (isRedirecting) {
@@ -82,43 +104,64 @@ export default function RamadanIntro() {
             </motion.p>
           </div>
 
+          {/* Auth Error */}
+          <AnimatePresence>
+            {authError && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="flex items-center gap-3 px-5 py-4 rounded-2xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium"
+              >
+                <AlertCircle className="w-5 h-5 shrink-0" />
+                <span>{authError}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Action Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8">
+          <div className="grid items-center grid-cols-1 md:grid-cols-2 gap-6 pt-8">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              whileHover={{ y: -5 }}
-              onClick={() => handleStart('loggedIn')}
-              className="group cursor-pointer p-8 rounded-3xl bg-card border border-border hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-primary/5"
+              whileHover={isSigningIn ? {} : { y: -5 }}
+              onClick={() => !isSigningIn && handleStart('loggedIn')}
+              className={`group p-8 rounded-3xl bg-card border border-border hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-primary/5 ${isSigningIn ? 'opacity-70 cursor-wait' : 'cursor-pointer'
+                }`}
             >
               <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <ShieldCheck className="w-8 h-8 text-primary" />
+                {isSigningIn ? (
+                  <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                ) : (
+                  <ShieldCheck className="w-8 h-8 text-primary" />
+                )}
               </div>
               <h3 className="text-2xl font-bold mb-2 flex items-center gap-2">
-                Sign in with Google
-                <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                {isSigningIn ? 'Signing in...' : 'Sign in with Google'}
+                {!isSigningIn && <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />}
               </h3>
               <p className="text-muted-foreground">Sync your progress across all devices and join the community leaderboards.</p>
             </motion.div>
 
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              whileHover={{ y: -5 }}
-              onClick={() => handleStart('guest')}
-              className="group cursor-pointer p-8 rounded-3xl bg-card border border-border hover:border-foreground/20 transition-all duration-300 shadow-sm hover:shadow-xl"
+              whileHover={isSigningIn ? {} : { y: -5 }}
+              onClick={() => !isSigningIn && handleStart('guest')}
+              className={`group p-8 rounded-3xl bg-card border border-border hover:border-foreground/20 transition-all duration-300 shadow-sm hover:shadow-xl ${isSigningIn ? 'opacity-70 cursor-wait' : 'cursor-pointer'
+                }`}
             >
               <div className="w-14 h-14 bg-muted rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Zap className="w-8 h-8 text-foreground/70" />
               </div>
               <h3 className="text-2xl font-bold mb-2 flex items-center gap-2">
                 Continue as Guest
-                <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                {!isSigningIn && <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />}
               </h3>
               <p className="text-muted-foreground">Start instantly without an account. All data stays local to your browser.</p>
-            </motion.div>
+            </motion.div> */}
           </div>
 
           {/* Value Props */}

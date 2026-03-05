@@ -3,6 +3,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useRamadanStore } from '../../store/ramadanStore';
 import { useQuranProgressStore } from '../../store/quranProgressStore';
 import { getTodayDate, formatRamadanDate } from '../../utils/ramadanCalculation';
@@ -21,9 +22,21 @@ import HabitChecklist from './HabitCheckList';
 import DhikrCounter from './DhikrCounter';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
 
 export default function DailyDashboard() {
+  const router = useRouter();
+  const { user, loading: authLoading } = useFirebaseAuth();
+  const { userMode } = useRamadanStore();
   const [activeTab, setActiveTab] = useState<'overview' | 'dhikr'>('overview');
+
+  // Auth guard: redirect unauthenticated loggedIn users back to /ramadan
+  useEffect(() => {
+    if (authLoading) return;
+    if (userMode === 'loggedIn' && !user) {
+      router.push('/ramadan');
+    }
+  }, [authLoading, user, userMode, router]);
 
   const {
     quranPlan,

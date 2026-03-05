@@ -36,7 +36,7 @@ export default function HistorySidebar({
     };
 
     const sidebarContent = (
-        <div className="h-full flex flex-col bg-muted/30 border-r border-border">
+        <div className="h-full flex flex-col bg-white border-r border-border">
             {/* Header */}
             <div className="p-4 border-b border-border">
                 <button
@@ -66,21 +66,26 @@ export default function HistorySidebar({
                             <div
                                 key={conversation.id}
                                 className={`group relative p-3 rounded-lg cursor-pointer transition-colors ${activeConversationId === conversation.id
-                                        ? 'bg-primary/10 border border-primary/20'
-                                        : 'hover:bg-muted'
+                                    ? 'bg-primary/10 border border-primary/20'
+                                    : 'hover:bg-muted'
                                     }`}
-                                onClick={() => onSelectConversation(conversation.id)}
+                                onClick={() => { setIsOpen(false); return onSelectConversation(conversation.id) }}
                             >
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="flex-1 min-w-0">
                                         <h3 className="font-medium text-sm truncate">
-                                            {conversation.title}
+                                            {conversation.lastMessage ? (
+                                                <p>
+                                                    {conversation.lastMessage}
+                                                </p>
+                                            ) : (
+                                                <p>
+                                                    {conversation.title}
+                                                </p>
+
+                                            )}
                                         </h3>
-                                        {conversation.lastMessage && (
-                                            <p className="text-xs text-muted-foreground truncate mt-1">
-                                                {conversation.lastMessage}
-                                            </p>
-                                        )}
+
                                         <p className="text-xs text-muted-foreground mt-1">
                                             {formatDate(conversation.updatedAt)}
                                         </p>
