@@ -77,7 +77,7 @@ const VerseItem = React.memo(({ verse, isActive, activeWordPosition, setVerseRef
         {verse.words
           ?.filter((word: any) => word.charTypeName === 'word')
           ?.map((word: any) => (
-            <span key={word.id} className="mr-2">
+            <span key={word.id} className="mr-2 inline-block">
               {word.translation?.text}
             </span>
           ))}
@@ -143,14 +143,36 @@ export default function QuranReaderPage() {
   const progress = getProgress(parseInt(String(surahNumber)));
   const totalVerses = chapter?.versesCount || 0;
 
-  // Restore scroll position
+  // Auto-scroll to last saved progress (verse-based, not pixel-based)
   useEffect(() => {
-    if (progress?.scrollPosition && containerRef.current) {
-      setTimeout(() => {
-        window.scrollTo(0, progress.scrollPosition || 0);
-      }, 600);
-    }
-  }, [progress, loading]); // Added loading dependency to ensure we scroll after content loads
+    if (loading || !verses?.length || !progress?.lastAyahRead) return;
+
+    const lastAyah = progress.lastAyahRead;
+    const verseKey = `${surahNumber}:${lastAyah}`;
+
+    // Verse refs may not be populated on the first render cycle,
+    // so we retry a few times with a short interval.
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    const tryScroll = () => {
+      const el = verseRefs.current[verseKey];
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      attempts++;
+      if (attempts < maxAttempts) {
+        setTimeout(tryScroll, 200);
+      }
+    };
+
+    // Delay the first attempt slightly so the DOM has time to paint
+    const timer = setTimeout(tryScroll, 300);
+    return () => clearTimeout(timer);
+    // Only run once when verses load — not on every progress change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, verses?.length]);
 
   // Track scroll and update progress
   useEffect(() => {
